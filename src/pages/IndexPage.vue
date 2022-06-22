@@ -110,8 +110,20 @@
       <q-btn
         color="black"
         class="full-width"
-        label="Full-width"
-        @click="callThat__('posts')"
+        label="Get All"
+        @click="getAll()"
+      />
+      <q-btn
+        color="red"
+        class="full-width"
+        label="Get Detail"
+        @click="getDetail(1)"
+      />
+      <q-btn
+        color="yellow"
+        class="full-width text-black"
+        label="Post"
+        @click="postText()"
       />
     </div>
   </div>
@@ -122,7 +134,9 @@
 import { Todo, Meta, Category } from 'components/models';
 // import ExampleComponent from 'components/ExampleComponent.vue';
 import { defineComponent, ref } from 'vue';
-import get from '../api/axios.js';
+import http from '../api/axios.js';
+
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -316,7 +330,7 @@ export default defineComponent({
         ],
       },
     ]);
-
+    const $q = useQuasar();
     return {
       todos,
       meta,
@@ -324,9 +338,29 @@ export default defineComponent({
       stars: ref(5),
       tab: ref('a'),
       categories,
-      async callThat__($endpoint: string) {
-        let $res = await get($endpoint);
+      async getAll() {
+        $q.loading.show();
+        let $res = await http.getAll();
         console.log($res);
+        $q.loading.hide();
+      },
+      async getDetail(id: number) {
+        $q.loading.show();
+        let $res = await http.get(id);
+        console.log($res);
+        $q.loading.hide();
+      },
+      async postText() {
+        $q.loading.show({
+          message: 'Posting comment. Please wait...',
+          spinnerColor: 'primary',
+        });
+        let $res = await http.create({
+          description: 'dummy description',
+          'added by': 'xeemax',
+        });
+        console.log($res);
+        $q.loading.hide();
       },
     };
   },
