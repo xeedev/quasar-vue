@@ -127,11 +127,23 @@
       />
     </div>
   </div>
+  <div class="row q-pa-xl">
+    <div class="col-md-6 col-sm-12">
+      <h4 class="q-mb-none"><strong>GET IN TOUCH</strong></h4>
+      <p class="q-ma-none">For any kind of queries please feel free to contact us,</p>
+      <h6 class="q-mt-none">Pakistan</h6>
+      <p class="q-mt-none"><strong>03004645434</strong></p>
+      <p><strong>woodsurface99@gmail.com</strong></p>
+      <p><strong>Lahore, Punjab, pakistan</strong></p>
+    </div>
+    <div class="col-md-6 col-sm-12"><ContactUs /></div>
+  </div>
   <!-- </q-page> -->
 </template>
 
 <script lang="ts">
 import { Todo, Meta, Category } from 'components/models';
+import ContactUs from 'src/components/ContactUs.vue';
 // import ExampleComponent from 'components/ExampleComponent.vue';
 import { defineComponent, ref } from 'vue';
 import http from '../api/axios.js';
@@ -140,7 +152,7 @@ import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'IndexPage',
-  // components: { ExampleComponent },
+  components: { ContactUs },
   setup() {
     const todos = ref<Todo[]>([
       {

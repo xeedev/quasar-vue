@@ -12,11 +12,12 @@
           @click="toggleLeftDrawer"
         />
         <q-img
-          src="https://upload.wikimedia.org/wikipedia/commons/1/1e/RPC-JP_Logo.png"
+          src="http://woodsurface.pk/jewelry/img/logo.png"
           spinner-color="white"
           fit="contain"
-          height="50px"
-          style="width: 150px"
+          height="100px"
+          class="q-ma-sm"
+          style="max-width: 150px"
         />
         <div class="row justify-between desktop-only">
           <p
