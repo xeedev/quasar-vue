@@ -59,7 +59,7 @@
                   v-for="(image, index) in category.images"
                   :key="index"
                 >
-                  <q-card class="my-card q-ma-md">
+                  <q-card class="my-card q-ma-md cursor-pointer" @click="$router.push('/three')">
                     <q-img :src="image" spinner-color="black" />
 
                     <q-card-section>
