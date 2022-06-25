@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="bg-black">
+    <q-header elevated reveal class="bg-black">
       <q-toolbar class="row justify-between items-center">
         <q-btn
           flat
@@ -14,9 +14,10 @@
         <q-img
           src="http://woodsurface.pk/jewelry/img/logo.png"
           spinner-color="white"
+          @click="$router.push('/')"
           fit="contain"
-          height="100px"
-          class="q-ma-sm"
+          height="60px"
+          class="q-ma-sm cursor-pointer"
           style="max-width: 150px"
         />
         <div class="row justify-between desktop-only">
@@ -62,6 +63,16 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+    <q-footer reveal>
+      <q-toolbar class="bg-black text-center">
+        <q-toolbar-title
+          >©{{ new Date().getFullYear() }} Wood Surface, All rights
+          reserved</q-toolbar-title
+        >
+        <!-- <q-btn flat round dense icon="facebook" />
+        <q-btn flat round dense icon="instagram" /> -->
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 

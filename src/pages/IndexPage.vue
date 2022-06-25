@@ -1,11 +1,4 @@
 <template>
-  <!-- <q-page class="row items-center justify-evenly"> -->
-  <!-- <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component> !-->
   <div>
     <q-carousel
       swipeable
@@ -59,7 +52,10 @@
                   v-for="(image, index) in category.images"
                   :key="index"
                 >
-                  <q-card class="my-card q-ma-md cursor-pointer" @click="$router.push('/three')">
+                  <q-card
+                    class="my-card q-ma-md cursor-pointer"
+                    @click="$router.push('/three')"
+                  >
                     <q-img :src="image" spinner-color="black" />
 
                     <q-card-section>
@@ -127,16 +123,20 @@
       />
     </div>
   </div>
-  <div class="row q-pa-xl">
-    <div class="col-md-6 col-sm-12">
-      <h4 class="q-mb-none"><strong>GET IN TOUCH</strong></h4>
-      <p class="q-ma-none">For any kind of queries please feel free to contact us,</p>
-      <h6 class="q-mt-none">Pakistan</h6>
-      <p class="q-mt-none"><strong>03004645434</strong></p>
-      <p><strong>woodsurface99@gmail.com</strong></p>
-      <p><strong>Lahore, Punjab, pakistan</strong></p>
+  <div class="container">
+    <div class="row q-pa-xl">
+      <div class="col-md-6 col-sm-12">
+        <h4 class="q-mb-none"><strong>GET IN TOUCH</strong></h4>
+        <p class="q-ma-none">
+          For any kind of queries please feel free to contact us,
+        </p>
+        <h6 class="q-mt-none">Pakistan</h6>
+        <p class="q-mt-none"><strong>03004645434</strong></p>
+        <p><strong>woodsurface99@gmail.com</strong></p>
+        <p><strong>Lahore, Punjab, pakistan</strong></p>
+      </div>
+      <div class="col-md-6 col-sm-12"><ContactUs /></div>
     </div>
-    <div class="col-md-6 col-sm-12"><ContactUs /></div>
   </div>
   <!-- </q-page> -->
 </template>
