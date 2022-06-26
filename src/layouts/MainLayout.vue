@@ -39,6 +39,12 @@
           >
             THREE
           </p>
+          <p
+            class="q-px-xl q-ma-none cursor-pointer"
+            @click="$router.push('/login')"
+          >
+            LOGIN
+          </p>
         </div>
       </q-toolbar>
     </q-header>
@@ -98,6 +104,12 @@ const linksList = [
     caption: 'chat.quasar.dev',
     icon: 'chat',
     link: 'THREE',
+  },
+  {
+    title: 'Login',
+    caption: 'Login',
+    icon: 'user',
+    link: 'login',
   },
 ];
 
