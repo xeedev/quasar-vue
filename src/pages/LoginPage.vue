@@ -42,11 +42,13 @@
 </template>
 <script>
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
 export default {
   setup() {
     const $q = useQuasar();
+    const router = useRouter();
 
     const Email = ref(null);
     const Password = ref(null);
@@ -60,8 +62,9 @@ export default {
           color: 'green-4',
           textColor: 'white',
           icon: 'cloud_done',
-          message: 'Submitted',
+          message: 'Success',
         });
+        router.push('/dashboard');
       },
     };
   },
