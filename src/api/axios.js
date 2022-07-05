@@ -1,6 +1,6 @@
 import axios from 'axios';
 const RESOURCE_NAME = '/posts';
-axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com/';
+axios.defaults.baseURL = process.env.BASE_URL;
 export default {
   getAll() {
     return axios.get(RESOURCE_NAME);
@@ -16,5 +16,8 @@ export default {
   },
   delete(id) {
     return axios.delete(`${RESOURCE_NAME}/${id}`);
+  },
+  login() {
+    return axios.post('/login');
   },
 };
