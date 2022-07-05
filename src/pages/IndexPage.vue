@@ -24,6 +24,10 @@
         :name="4"
         img-src="https://cdn.quasar.dev/img/quasar.jpg"
       />
+      <q-carousel-slide
+        :name="5"
+        :img-src="testUrl"
+      />
     </q-carousel>
     <div>
       <q-tabs v-model="tab" align="justify" narrow-indicator class="q-mb-lg">
@@ -342,17 +346,21 @@ export default defineComponent({
         ],
       },
     ]);
+    const url = process.env.ROOT_URL + '/public/media/1657039301-9RXEN7lTHA.png';
+    const testUrl = url.replace("public/", "storage/");
     const $q = useQuasar();
     return {
+      testUrl,
       todos,
       meta,
       slide,
+
       stars: ref(5),
       tab: ref('a'),
       categories,
       async getAll() {
         $q.loading.show();
-        let $res = await http.getAll();
+        let $res = await http.login();
         console.log($res);
         $q.loading.hide();
       },
