@@ -39,12 +39,18 @@
             style="max-width: 150px"
           />
         </q-item-label>
+        <template v-for="(essentialLink,index) in essentialLinks" :key="index">
+          <q-item clickable tag="a" @click="$router.push(essentialLink.link)">
+            <q-item-section avatar>
+              <q-icon :name="essentialLink.icon" />
+            </q-item-section>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+            <q-item-section>
+              <q-item-label>{{essentialLink.title}}</q-item-label>
+              <q-item-label caption>{{essentialLink.caption}}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
       </q-list>
     </q-drawer>
 
@@ -56,32 +62,32 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import EssentialLink from 'components/EssentialLink.vue';
+// import EssentialLink from 'components/EssentialLink.vue';
 
 const linksList = [
   {
     title: 'Dashboard',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
+    caption: 'Statistics',
+    icon: 'dashboard',
+    link: 'dashboard',
   },
   {
     title: 'Products',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
+    caption: 'Manage Products',
+    icon: 'store',
+    link: 'products',
   },
   {
     title: 'Orders',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
+    caption: 'Track Orders',
+    icon: 'trending_up',
+    link: 'orders',
   },
   {
     title: 'Media',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
+    caption: 'Manage Gallery',
+    icon: 'image',
+    link: 'gallery',
   },
 ];
 
@@ -89,7 +95,7 @@ export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    EssentialLink,
+    // EssentialLink,
   },
 
   setup() {

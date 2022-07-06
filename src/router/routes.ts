@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+import Api from "src/services/api";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -29,6 +30,11 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('src/pages/DashboardPage.vue') },
     ],
+    beforeEnter: async (to, from, next) =>
+    {
+      if (await IsAuthenticated()) next();
+      else next('/login');
+    }
   },
 
   // Always leave this as last one,
@@ -38,5 +44,9 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/ErrorNotFound.vue'),
   },
 ];
+async function IsAuthenticated(){
+  const res =   await Api.getList( 'validateToken');
+  return !!res?.data?.authenticated;
+}
 
 export default routes;

@@ -48,7 +48,7 @@ class Api {
         return await http.post('/confirm-password', password, 'ws');
     }
 
-    async getList( module = null, payload = {}, app = 'ws' ) {
+    async getList( module = '', payload = {}, app = 'ws' ) {
         let route = routes[app][module];
         if(route) return await http.get(`/${route}`, payload, app);
         else {
