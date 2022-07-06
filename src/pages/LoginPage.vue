@@ -42,7 +42,7 @@
     </q-card>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import Api from '../services/api/index'
@@ -51,7 +51,7 @@ import { ref, onMounted } from 'vue';
 export default {
   setup() {
     onMounted(async () => {
-      let response = await Api.getList( 'validateToken').then((response) => {
+       await Api.getList( 'validateToken').then((response) => {
         if (response?.data?.authenticated){
           router.push('/dashboard');
         }
@@ -62,7 +62,7 @@ export default {
 
     const Email = ref(null);
     const Password = ref(null);
-    const error = ref(null);
+    const error = ref('');
     const isValid = ref(true);
 
     return {

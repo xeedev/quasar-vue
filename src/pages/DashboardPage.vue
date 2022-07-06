@@ -1,14 +1,67 @@
 <template>
-  <q-page class="row items-center justify-evenly"> Dashboard </q-page>
+  <q-page class="row">
+    <div class="q-pa-md row items-start q-gutter-md justify-center">
+    <q-card class="my-card bg-green-5">
+      <q-card-section class="q-ma-xl">
+        <div class="row justify-center items-center text-white text-center">
+          Customers
+          <br>
+          {{ statistics.customers }}
+        </div>
+      </q-card-section>
+    </q-card>
+      <q-card class="my-card bg-amber-5">
+        <q-card-section class="q-ma-xl">
+          <div class="row justify-center items-center text-white text-center">
+            All Orders
+            <br>
+            {{ statistics.orders }}
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-card class="my-card bg-red-5">
+        <q-card-section class="q-ma-xl">
+          <div class="row justify-center items-center text-white text-center">
+            Pending Orders
+            <br>
+            {{ statistics.pendingOrders }}
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-card class="my-card bg-blue-5">
+        <q-card-section class="q-ma-xl">
+          <div class="row justify-center items-center text-white text-center">
+            Today's Orders
+            <br>
+            {{ statistics.todaysOrders }}
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-card class="my-card bg-dark">
+        <q-card-section class="q-ma-xl">
+          <div class="row justify-center items-center text-white text-center">
+            Total Products
+            <br>
+            {{ statistics.products }}
+          </div>
+        </q-card-section>
+      </q-card>
+    </div>
+  </q-page>
 </template>
 
 <script lang="ts">
 import { Todo, Meta } from 'components/models';
-import { defineComponent, ref } from 'vue';
+import Api from "src/services/api";
+import { defineComponent, ref, onMounted } from 'vue';
 
 export default defineComponent({
   name: 'DashboardPage',
   setup() {
+    onMounted( async () =>{
+      let res = await Api.getList('statistics');
+      statistics.value = res.data
+    });
     const todos = ref<Todo[]>([
       {
         id: 1,
@@ -34,7 +87,13 @@ export default defineComponent({
     const meta = ref<Meta>({
       totalCount: 1200,
     });
-    return { todos, meta };
+    const statistics = ref('');
+    return { todos, meta,statistics };
   },
 });
 </script>
+<style lang="sass" scoped>
+.my-card
+  width: 100%
+  max-width: 250px
+</style>

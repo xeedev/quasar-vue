@@ -22,7 +22,8 @@ const routes = {
         'forgotPassword':'forgot-password',
         'draftVendors' : 'draft-vendors-list',
         'products' : 'products',
-        'validateToken' : 'validate-token'
+        'validateToken' : 'validate-token',
+        'statistics' : 'statistics'
     },
 };
 
