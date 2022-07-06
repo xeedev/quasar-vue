@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated reveal class="bg-black">
+    <q-header elevated reveal class="bg-white">
       <q-toolbar class="row justify-between items-center">
         <q-btn
           flat
@@ -22,25 +22,25 @@
         />
         <div class="row justify-between desktop-only">
           <p
-            class="q-px-xl q-ma-none cursor-pointer"
+            class="q-px-xl text-black q-ma-none cursor-pointer"
             @click="$router.push('/')"
           >
             ONE
           </p>
           <p
-            class="q-px-xl q-ma-none cursor-pointer"
+            class="q-px-xl text-black q-ma-none cursor-pointer"
             @click="$router.push('/two')"
           >
             TWO
           </p>
           <p
-            class="q-px-xl q-ma-none cursor-pointer"
+            class="q-px-xl text-black q-ma-none cursor-pointer"
             @click="$router.push('/three')"
           >
             THREE
           </p>
           <p
-            class="q-px-xl q-ma-none cursor-pointer"
+            class="q-px-xl text-black q-ma-none cursor-pointer"
             @click="$router.push('/login')"
           >
             LOGIN

@@ -1,5 +1,4 @@
 import axios from 'axios';
-const RESOURCE_NAME = '/posts';
 axios.defaults.baseURL = process.env.BASE_URL;
 export default {
   getAll() {
@@ -17,7 +16,10 @@ export default {
   delete(id) {
     return axios.delete(`${RESOURCE_NAME}/${id}`);
   },
-  login() {
-    return axios.post('/login');
+  login(data) {
+    return axios.post('/login',data);
   },
+  checkToken(payload){
+    return axios.get('validate-token',payload);
+  }
 };
