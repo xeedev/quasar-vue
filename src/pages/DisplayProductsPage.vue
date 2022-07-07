@@ -91,6 +91,29 @@
         ]"
             />
             <q-select v-model="category" :options="categories" :option-value="(categories) => categories === null ? null : categories.type" label="Select Category" :option-label="(categories) => categories === null ? null : categories.type" />
+            <p class="text-dark q-mt-md"><strong>Upload Images *</strong></p>
+            <div class="text-dark q-gutter-md" style="font-size: 2em">
+              <q-icon name="attachment" class="cursor-pointer" @click="$refs.image.click()" />
+            </div>
+            <input
+              style="display: none"
+              type="file"
+              ref="image"
+              multiple
+              accept="image/*"
+              @change="uploadImages"
+            />
+            <div class="row q-gutter-md">
+              <template v-for="(uploadedImage,index) in uploadedImages" :key="index">
+                <q-card class="my-card" :style="
+                'background-image: url(' +
+                uploadedImage +
+                ');'
+              ">
+                  <q-icon name="close" class="absolute close bg-red-5 border-radius-inherit cursor-pointer" @click="removeUrl(index)"></q-icon>
+                </q-card>
+              </template>
+            </div>
             <div>
               <q-btn label="Submit" type="submit" color="dark"/>
             </div>
@@ -104,7 +127,8 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import Api from "../services/api";
+import Api from '../services/api';
+import axios from "axios";
 
 
 const columns = [
@@ -189,6 +213,7 @@ export default {
     const dialog = ref(false);
     const categories = ref([]);
     const category = ref('');
+    const uploadedImages = ref([])
     // emulate ajax call
     // SELECT * FROM ... WHERE...LIMIT...
     function fetchFromServer (startRow, count, filter, sortBy, descending) {
@@ -265,7 +290,35 @@ export default {
       action.value = val;
       dialog.value = true
     }
+    function uploadImages(event) {
+      this.onFilesPicked(event);
+    }
+     async  function  onFilesPicked (event) {
+      const files = event.target.files;
+      if (!files.length) {
+        return;
+      }
 
+       $q.loading.show();
+       axios
+         .post(process.env.BASE_URL+'/imageUpload', files, {
+           headers: {
+             'Content-Type': 'multipart/form-data',
+             Authorization: 'Bearer ' + localStorage.getItem('token'),
+           },
+         })
+        .then((response) => {
+          let urls = response.data.urls;
+          urls.forEach(url => {
+              url = process.env.ROOT_URL+ '/' + url
+              uploadedImages.value.push(url.replace('public/', 'storage/'))
+          })
+        });
+       $q.loading.hide();
+    }
+    function removeUrl(index){
+      uploadedImages.value.splice(index, 1);
+    }
     onMounted(async () => {
       let res = await Api.getList('categories');
       categories.value = res.data.data
@@ -289,9 +342,23 @@ export default {
       price,
       categories,
       category,
+      uploadedImages,
       onRequest,
       submit,
+      uploadImages,
+      onFilesPicked,
+      removeUrl
     }
   }
 }
 </script>
+<style scoped>
+.my-card{
+  height: 100px;
+  width: 100px;
+  background-size: cover;
+}
+.close{
+  right: 0;
+}
+</style>
