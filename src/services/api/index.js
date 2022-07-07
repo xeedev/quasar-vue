@@ -23,7 +23,8 @@ const routes = {
         'draftVendors' : 'draft-vendors-list',
         'products' : 'products',
         'validateToken' : 'validate-token',
-        'statistics' : 'statistics'
+        'statistics' : 'statistics',
+        'categories' : 'categories',
     },
 };
 
