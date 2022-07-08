@@ -30,7 +30,10 @@
             {{ col.value }}
           </q-td>
           <q-td auto-width>
-            <q-btn size="sm" color="dark" round dense icon="edit" @click="submit('Edit')" />
+            <q-btn size="sm" color="dark" round dense icon="edit" @click="submit('Edit',props.row.id)" />
+          </q-td>
+          <q-td auto-width>
+            <q-btn size="sm" color="red" round dense icon="delete" @click="submit('Edit',props.row.id)" />
           </q-td>
         </q-tr>
       </template>
@@ -47,7 +50,7 @@
       <q-card class="text-white">
         <q-bar>
           <q-space />
-          <q-btn dense flat icon="close" v-close-popup>
+          <q-btn dense flat icon="close" v-close-popup @click="reset">
             <q-tooltip class="bg-white text-primary">Close</q-tooltip>
           </q-btn>
         </q-bar>
@@ -58,6 +61,7 @@
 
         <q-card-section>
           <q-form
+            @submit="save"
             class="q-gutter-md"
           >
             <q-input
@@ -90,7 +94,9 @@
           val => val !== null && val !== '' || 'Please enter price',
         ]"
             />
-            <q-select v-model="category" :options="categories" :option-value="(categories) => categories === null ? null : categories.type" label="Select Category" :option-label="(categories) => categories === null ? null : categories.type" />
+            <q-select v-model="category" :options="categories" :option-value="(categories) => categories === null ? null : categories.type" label="Select Category" :option-label="(categories) => categories === null ? null : categories.type"
+                      :rules="[val => val !== null && val !== '' || 'Please select category']"
+            />
             <p class="text-dark q-mt-md"><strong>Upload Images *</strong></p>
             <div class="text-dark q-gutter-md" style="font-size: 2em">
               <q-icon name="attachment" class="cursor-pointer" @click="$refs.image.click()" />
@@ -128,70 +134,25 @@
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import Api from '../services/api';
-import axios from "axios";
+import axios from 'axios';
 
 
 const columns = [
   {
-    name: 'desc',
+    name: 'name',
     required: true,
-    label: 'Dessert (100g serving)',
+    label: 'Name',
     align: 'left',
     field: row => row.name,
     format: val => `${val}`,
     sortable: true
   },
-  { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-  { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-  { name: 'carbs', label: 'Carbs (g)', field: 'carbs', sortable: true },
-  { name: 'protein', label: 'Protein (g)', field: 'protein', sortable: true },
-  { name: 'sodium', label: 'Sodium (mg)', field: 'sodium', sortable: true },
-  { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-  { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
+  { name: 'detail', align: 'center', label: 'Detail', field: 'detail', sortable: true },
+  { name: 'price', label: 'Price', field: 'price', sortable: true },
+  { name: 'category', label: 'Category', field: 'category', sortable: true },
 ]
 
-const originalRows = [
-  { id: 1, name: 'Frozen Yogurt', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%' },
-  { id: 2, name: 'Ice cream sandwich', calories: 237, fat: 9.0, carbs: 37, protein: 4.3, sodium: 129, calcium: '8%', iron: '1%' },
-  { id: 3, name: 'Eclair', calories: 262, fat: 16.0, carbs: 23, protein: 6.0, sodium: 337, calcium: '6%', iron: '7%' },
-  { id: 4, name: 'Cupcake', calories: 305, fat: 3.7, carbs: 67, protein: 4.3, sodium: 413, calcium: '3%', iron: '8%' },
-  { id: 5, name: 'Gingerbread', calories: 356, fat: 16.0, carbs: 49, protein: 3.9, sodium: 327, calcium: '7%', iron: '16%' },
-  { id: 6, name: 'Jelly bean', calories: 375, fat: 0.0, carbs: 94, protein: 0.0, sodium: 50, calcium: '0%', iron: '0%' },
-  { id: 7, name: 'Lollipop', calories: 392, fat: 0.2, carbs: 98, protein: 0, sodium: 38, calcium: '0%', iron: '2%' },
-  { id: 8, name: 'Honeycomb', calories: 408, fat: 3.2, carbs: 87, protein: 6.5, sodium: 562, calcium: '0%', iron: '45%' },
-  { id: 9, name: 'Donut', calories: 452, fat: 25.0, carbs: 51, protein: 4.9, sodium: 326, calcium: '2%', iron: '22%' },
-  { id: 10, name: 'KitKat', calories: 518, fat: 26.0, carbs: 65, protein: 7, sodium: 54, calcium: '12%', iron: '6%' },
-  { id: 11, name: 'Frozen Yogurt-1', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%' },
-  { id: 12, name: 'Ice cream sandwich-1', calories: 237, fat: 9.0, carbs: 37, protein: 4.3, sodium: 129, calcium: '8%', iron: '1%' },
-  { id: 13, name: 'Eclair-1', calories: 262, fat: 16.0, carbs: 23, protein: 6.0, sodium: 337, calcium: '6%', iron: '7%' },
-  { id: 14, name: 'Cupcake-1', calories: 305, fat: 3.7, carbs: 67, protein: 4.3, sodium: 413, calcium: '3%', iron: '8%' },
-  { id: 15, name: 'Gingerbread-1', calories: 356, fat: 16.0, carbs: 49, protein: 3.9, sodium: 327, calcium: '7%', iron: '16%' },
-  { id: 16, name: 'Jelly bean-1', calories: 375, fat: 0.0, carbs: 94, protein: 0.0, sodium: 50, calcium: '0%', iron: '0%' },
-  { id: 17, name: 'Lollipop-1', calories: 392, fat: 0.2, carbs: 98, protein: 0, sodium: 38, calcium: '0%', iron: '2%' },
-  { id: 18, name: 'Honeycomb-1', calories: 408, fat: 3.2, carbs: 87, protein: 6.5, sodium: 562, calcium: '0%', iron: '45%' },
-  { id: 19, name: 'Donut-1', calories: 452, fat: 25.0, carbs: 51, protein: 4.9, sodium: 326, calcium: '2%', iron: '22%' },
-  { id: 20, name: 'KitKat-1', calories: 518, fat: 26.0, carbs: 65, protein: 7, sodium: 54, calcium: '12%', iron: '6%' },
-  { id: 21, name: 'Frozen Yogurt-2', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%' },
-  { id: 22, name: 'Ice cream sandwich-2', calories: 237, fat: 9.0, carbs: 37, protein: 4.3, sodium: 129, calcium: '8%', iron: '1%' },
-  { id: 23, name: 'Eclair-2', calories: 262, fat: 16.0, carbs: 23, protein: 6.0, sodium: 337, calcium: '6%', iron: '7%' },
-  { id: 24, name: 'Cupcake-2', calories: 305, fat: 3.7, carbs: 67, protein: 4.3, sodium: 413, calcium: '3%', iron: '8%' },
-  { id: 25, name: 'Gingerbread-2', calories: 356, fat: 16.0, carbs: 49, protein: 3.9, sodium: 327, calcium: '7%', iron: '16%' },
-  { id: 26, name: 'Jelly bean-2', calories: 375, fat: 0.0, carbs: 94, protein: 0.0, sodium: 50, calcium: '0%', iron: '0%' },
-  { id: 27, name: 'Lollipop-2', calories: 392, fat: 0.2, carbs: 98, protein: 0, sodium: 38, calcium: '0%', iron: '2%' },
-  { id: 28, name: 'Honeycomb-2', calories: 408, fat: 3.2, carbs: 87, protein: 6.5, sodium: 562, calcium: '0%', iron: '45%' },
-  { id: 29, name: 'Donut-2', calories: 452, fat: 25.0, carbs: 51, protein: 4.9, sodium: 326, calcium: '2%', iron: '22%' },
-  { id: 30, name: 'KitKat-2', calories: 518, fat: 26.0, carbs: 65, protein: 7, sodium: 54, calcium: '12%', iron: '6%' },
-  { id: 31, name: 'Frozen Yogurt-3', calories: 159, fat: 6.0, carbs: 24, protein: 4.0, sodium: 87, calcium: '14%', iron: '1%' },
-  { id: 32, name: 'Ice cream sandwich-3', calories: 237, fat: 9.0, carbs: 37, protein: 4.3, sodium: 129, calcium: '8%', iron: '1%' },
-  { id: 33, name: 'Eclair-3', calories: 262, fat: 16.0, carbs: 23, protein: 6.0, sodium: 337, calcium: '6%', iron: '7%' },
-  { id: 34, name: 'Cupcake-3', calories: 305, fat: 3.7, carbs: 67, protein: 4.3, sodium: 413, calcium: '3%', iron: '8%' },
-  { id: 35, name: 'Gingerbread-3', calories: 356, fat: 16.0, carbs: 49, protein: 3.9, sodium: 327, calcium: '7%', iron: '16%' },
-  { id: 36, name: 'Jelly bean-3', calories: 375, fat: 0.0, carbs: 94, protein: 0.0, sodium: 50, calcium: '0%', iron: '0%' },
-  { id: 37, name: 'Lollipop-3', calories: 392, fat: 0.2, carbs: 98, protein: 0, sodium: 38, calcium: '0%', iron: '2%' },
-  { id: 38, name: 'Honeycomb-3', calories: 408, fat: 3.2, carbs: 87, protein: 6.5, sodium: 562, calcium: '0%', iron: '45%' },
-  { id: 39, name: 'Donut-3', calories: 452, fat: 25.0, carbs: 51, protein: 4.9, sodium: 326, calcium: '2%', iron: '22%' },
-  { id: 40, name: 'KitKat-3', calories: 518, fat: 26.0, carbs: 65, protein: 7, sodium: 54, calcium: '12%', iron: '6%' }
-]
+const originalRows = ref([])
 
 export default {
   setup () {
@@ -206,7 +167,7 @@ export default {
       sortBy: 'desc',
       descending: false,
       page: 1,
-      rowsPerPage: 3,
+      rowsPerPage: 10,
       rowsNumber: 10
     })
     const action = ref('');
@@ -214,12 +175,11 @@ export default {
     const categories = ref([]);
     const category = ref('');
     const uploadedImages = ref([])
-    // emulate ajax call
-    // SELECT * FROM ... WHERE...LIMIT...
+    const imageUrls = ref([]);
     function fetchFromServer (startRow, count, filter, sortBy, descending) {
       const data = filter
-        ? originalRows.filter(row => row.name.includes(filter))
-        : originalRows.slice()
+        ? originalRows.value.filter(row => row.name.includes(filter))
+        : originalRows.value.slice()
 
       // handle sortBy
       if (sortBy) {
@@ -238,13 +198,12 @@ export default {
       return data.slice(startRow, startRow + count)
     }
 
-    // emulate 'SELECT count(*) FROM ...WHERE...'
     function getRowsNumberCount (filter) {
       if (!filter) {
-        return originalRows.length
+        return originalRows.value.length
       }
       let count = 0
-      originalRows.forEach(treat => {
+      originalRows.value.forEach(treat => {
         if (treat.name.includes(filter)) {
           ++count
         }
@@ -286,8 +245,19 @@ export default {
       }, 1500)
     }
 
-    function submit(val){
+    async function submit(val,id = null){
       action.value = val;
+      if (val === 'Edit'){
+        let res = await Api.getOne('products', {id});
+        let product = res.data.data;
+        name.value = product.name
+        price.value = product.price
+        detail.value = product.detail
+        category.value = categories.value.find(obj => obj.type === product.category)
+        product.media.forEach(media =>{
+          uploadedImages.value.push(process.env.ROOT_URL+ '/' + media.url)
+        })
+      }
       dialog.value = true
     }
     function uploadImages(event) {
@@ -310,6 +280,7 @@ export default {
         .then((response) => {
           let urls = response.data.urls;
           urls.forEach(url => {
+              imageUrls.value.push(url.replace('public/', 'storage/'))
               url = process.env.ROOT_URL+ '/' + url
               uploadedImages.value.push(url.replace('public/', 'storage/'))
           })
@@ -320,14 +291,50 @@ export default {
       uploadedImages.value.splice(index, 1);
     }
     onMounted(async () => {
+      let products = await Api.getList('products');
+      originalRows.value = products.data.data;
       let res = await Api.getList('categories');
       categories.value = res.data.data
-        // get initial data from server (1st page)
       onRequest({
         pagination: pagination.value,
         filter: undefined
       })
     })
+    async function save(){
+      let payload = {
+        'name' : name.value,
+        'detail' : detail.value,
+        'price' : price.value,
+        'status' : 'normal',
+        'category_id' : category.value.id,
+        'uploadedImages' : imageUrls.value,
+      }
+      let res = await Api.post('products',payload);
+      if (res.data.success){
+        $q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'Success',
+        });
+        dialog.value = false
+      }else{
+        $q.notify({
+          color: 'red-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'Something went wrong',
+        });
+      }
+    }
+    function reset(){
+      name.value = null
+      price.value = null
+      detail.value = null
+      category.value = null
+      uploadedImages.value = []
+      imageUrls.value = []
+    }
 
     return {
       filter,
@@ -343,11 +350,14 @@ export default {
       categories,
       category,
       uploadedImages,
+      imageUrls,
       onRequest,
       submit,
       uploadImages,
       onFilesPicked,
-      removeUrl
+      removeUrl,
+      save,
+      reset
     }
   }
 }
