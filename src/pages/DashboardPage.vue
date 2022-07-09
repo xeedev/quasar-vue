@@ -4,13 +4,13 @@
     <q-card class="my-card bg-green-5">
       <q-card-section class="q-ma-xl">
         <div class="row justify-center items-center text-white text-center">
-          Customers
+          Total Customers
           <br>
           {{ statistics.customers }}
         </div>
       </q-card-section>
     </q-card>
-      <q-card class="my-card bg-amber-5">
+      <q-card class="my-card bg-amber-5 cursor-pointer" @click="$router.push('orders')">
         <q-card-section class="q-ma-xl">
           <div class="row justify-center items-center text-white text-center">
             All Orders
@@ -19,7 +19,7 @@
           </div>
         </q-card-section>
       </q-card>
-      <q-card class="my-card bg-red-5">
+      <q-card class="my-card bg-red-5 cursor-pointer" @click="$router.push('orders')">
         <q-card-section class="q-ma-xl">
           <div class="row justify-center items-center text-white text-center">
             Pending Orders
@@ -28,7 +28,7 @@
           </div>
         </q-card-section>
       </q-card>
-      <q-card class="my-card bg-blue-5">
+      <q-card class="my-card bg-blue-5 cursor-pointer" @click="$router.push('orders')">
         <q-card-section class="q-ma-xl">
           <div class="row justify-center items-center text-white text-center">
             Today's Orders
@@ -43,6 +43,15 @@
             Total Products
             <br>
             {{ statistics.products }}
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-card class="my-card bg-grey cursor-pointer" @click="$router.push('categories')">
+        <q-card-section class="q-ma-xl">
+          <div class="row justify-center items-center text-white text-center">
+            Total Categories
+            <br>
+            {{ statistics.categories }}
           </div>
         </q-card-section>
       </q-card>
