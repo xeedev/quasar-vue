@@ -84,6 +84,12 @@ const linksList = [
     link: 'orders',
   },
   {
+    title: 'Categories',
+    caption: 'Manage Categories',
+    icon: 'category',
+    link: 'categories',
+  },
+  {
     title: 'Media',
     caption: 'Manage Gallery',
     icon: 'image',
