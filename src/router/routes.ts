@@ -72,6 +72,18 @@ const routes: RouteRecordRaw[] = [
       else next('/login');
     }
   },
+  {
+    path: '/gallery',
+    component: () => import('layouts/DashboardLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/ManageGalleryPage.vue') },
+    ],
+    beforeEnter: async (to, from, next) =>
+    {
+      if (await IsAuthenticated()) next();
+      else next('/login');
+    }
+  },
 
   // Always leave this as last one,
   // but you can also remove it
