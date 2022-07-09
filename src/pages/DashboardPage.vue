@@ -37,7 +37,7 @@
           </div>
         </q-card-section>
       </q-card>
-      <q-card class="my-card bg-dark">
+      <q-card class="my-card bg-dark cursor-pointer" @click="$router.push('products')">
         <q-card-section class="q-ma-xl">
           <div class="row justify-center items-center text-white text-center">
             Total Products
