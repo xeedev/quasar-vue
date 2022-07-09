@@ -26,6 +26,7 @@ const routes = {
         'statistics' : 'statistics',
         'categories' : 'categories',
         'orders' : 'orders',
+        'gallery' : 'gallery',
         'image-upload' : 'imageUpload',
     },
 };
