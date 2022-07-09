@@ -12,9 +12,9 @@
       binary-state-sort
     >
       <template v-slot:top>
-        <q-btn color="dark" :disable="loading" label="Add Products" @click="submit('Add')" />
+        <q-btn color="dark" icon="add" :disable="loading" :label="$q.screen.xs || $q.screen.sm ? '' : 'Add Products'" @click="submit('Add')" />
         <q-space />
-        <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
+        <q-input outlined dense debounce="300" v-model="filter" placeholder="Search">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
@@ -22,6 +22,9 @@
       </template>
       <template v-slot:body="props">
         <q-tr :props="props">
+          <q-td auto-width>
+            <q-img :src="props.row.media[0]?.url ? props.row.media[0]?.url : ''" spinner-color="black" />
+          </q-td>
           <q-td
             v-for="col in props.cols"
             :key="col.name"
@@ -33,7 +36,7 @@
             <q-btn size="sm" color="dark" round dense icon="edit" @click="submit('Edit',props.row.id)" />
           </q-td>
           <q-td auto-width>
-            <q-btn size="sm" color="red" round dense icon="delete" @click="submit('Edit',props.row.id)" />
+            <q-btn size="sm" color="red" :key="props.row.id" :loading="deleteLoading[`deleteLoading-${props.row.id}`]" round dense icon="delete" @click="deleteProduct(props.row.id)" />
           </q-td>
         </q-tr>
       </template>
@@ -61,11 +64,11 @@
 
         <q-card-section>
           <q-form
-            @submit="save"
+            @submit="save(action)"
             class="q-gutter-md"
           >
             <q-input
-              filled
+              outlined
               v-model="name"
               label="Name *"
               hint="Name"
@@ -74,7 +77,7 @@
             />
 
             <q-input
-              filled
+              outlined
               v-model="detail"
               label="Detail *"
               hint="Description"
@@ -84,17 +87,17 @@
             />
 
             <q-input
-              filled
+              outlined
               type="number"
               v-model="price"
               min="1"
-              label="Product Price"
+              label="Product Price *"
               lazy-rules
               :rules="[
           val => val !== null && val !== '' || 'Please enter price',
         ]"
             />
-            <q-select v-model="category" :options="categories" :option-value="(categories) => categories === null ? null : categories.type" label="Select Category" :option-label="(categories) => categories === null ? null : categories.type"
+            <q-select outlined v-model="category" :options="categories" :option-value="(categories) => categories === null ? null : categories.type" label="Select Category" :option-label="(categories) => categories === null ? null : categories.type"
                       :rules="[val => val !== null && val !== '' || 'Please select category']"
             />
             <p class="text-dark q-mt-md"><strong>Upload Images *</strong></p>
@@ -121,7 +124,7 @@
               </template>
             </div>
             <div>
-              <q-btn label="Submit" type="submit" color="dark"/>
+              <q-btn :label="action === 'Edit' ? 'Update Product' : 'Add Product'" type="submit" color="dark"/>
             </div>
           </q-form>
         </q-card-section>
@@ -138,6 +141,10 @@ import axios from 'axios';
 
 
 const columns = [
+
+  {
+    label: 'Cover'
+  },
   {
     name: 'name',
     required: true,
@@ -147,7 +154,7 @@ const columns = [
     format: val => `${val}`,
     sortable: true
   },
-  { name: 'detail', align: 'center', label: 'Detail', field: 'detail', sortable: true },
+  { name: 'detail', align: 'center', label: 'Detail', field: 'detail', sortable: true, format: val => val.substring(0,20)},
   { name: 'price', label: 'Price', field: 'price', sortable: true },
   { name: 'category', label: 'Category', field: 'category', sortable: true },
 ]
@@ -156,7 +163,9 @@ const originalRows = ref([])
 
 export default {
   setup () {
+    const deleteLoading = ref({})
     const $q = useQuasar()
+    const selectedProduct = ref('')
     const name = ref('')
     const detail = ref('')
     const price = ref(1)
@@ -175,7 +184,6 @@ export default {
     const categories = ref([]);
     const category = ref('');
     const uploadedImages = ref([])
-    const imageUrls = ref([]);
     function fetchFromServer (startRow, count, filter, sortBy, descending) {
       const data = filter
         ? originalRows.value.filter(row => row.name.includes(filter))
@@ -211,16 +219,15 @@ export default {
       return count
     }
 
-    function onRequest (props) {
+    async function onRequest (props) {
+      loading.value = true
+      let products = await Api.getList('products');
+      originalRows.value = products.data.data;
       const { page, rowsPerPage, sortBy, descending } = props.pagination
       const filter = props.filter
 
-      loading.value = true
-
-      // emulate server
-      setTimeout(() => {
         // update rowsCount with appropriate value
-        pagination.value.rowsNumber = getRowsNumberCount(filter)
+        pagination.value.rowsNumber = await getRowsNumberCount(filter)
 
         // get all rows if "All" (0) is selected
         const fetchCount = rowsPerPage === 0 ? pagination.value.rowsNumber : rowsPerPage
@@ -242,12 +249,12 @@ export default {
 
         // ...and turn of loading indicator
         loading.value = false
-      }, 1500)
     }
 
     async function submit(val,id = null){
       action.value = val;
       if (val === 'Edit'){
+        selectedProduct.value = id
         let res = await Api.getOne('products', {id});
         let product = res.data.data;
         name.value = product.name
@@ -255,7 +262,7 @@ export default {
         detail.value = product.detail
         category.value = categories.value.find(obj => obj.type === product.category)
         product.media.forEach(media =>{
-          uploadedImages.value.push(process.env.ROOT_URL+ '/' + media.url)
+          uploadedImages.value.push(media.url)
         })
       }
       dialog.value = true
@@ -280,19 +287,17 @@ export default {
         .then((response) => {
           let urls = response.data.urls;
           urls.forEach(url => {
-              imageUrls.value.push(url.replace('public/', 'storage/'))
               url = process.env.ROOT_URL+ '/' + url
               uploadedImages.value.push(url.replace('public/', 'storage/'))
           })
         });
+
        $q.loading.hide();
     }
     function removeUrl(index){
       uploadedImages.value.splice(index, 1);
     }
     onMounted(async () => {
-      let products = await Api.getList('products');
-      originalRows.value = products.data.data;
       let res = await Api.getList('categories');
       categories.value = res.data.data
       onRequest({
@@ -300,16 +305,32 @@ export default {
         filter: undefined
       })
     })
-    async function save(){
+    async function save(action){
+      console.log(action);
       let payload = {
         'name' : name.value,
         'detail' : detail.value,
         'price' : price.value,
         'status' : 'normal',
         'category_id' : category.value.id,
-        'uploadedImages' : imageUrls.value,
+        'uploadedImages' : uploadedImages.value,
       }
-      let res = await Api.post('products',payload);
+      if (!payload.uploadedImages.length){
+        $q.notify({
+          color: 'red-4',
+          textColor: 'white',
+          icon: 'error',
+          message: 'Please select atleast one image',
+        });
+        return false;
+      }
+      let res = null;
+      if (action === 'Add'){
+        res = await Api.post('products',payload);
+      }else{
+        payload = Object.assign({'id': selectedProduct.value},payload)
+        res = await Api.put('products',payload);
+      }
       if (res.data.success){
         $q.notify({
           color: 'green-4',
@@ -317,6 +338,11 @@ export default {
           icon: 'cloud_done',
           message: 'Success',
         });
+        onRequest({
+          pagination: pagination.value,
+          filter: filter.value
+        })
+        reset()
         dialog.value = false
       }else{
         $q.notify({
@@ -333,7 +359,18 @@ export default {
       detail.value = null
       category.value = null
       uploadedImages.value = []
-      imageUrls.value = []
+    }
+    async function deleteProduct(id){
+      deleteLoading.value[`deleteLoading-${id}`] =  true
+      let res = await Api.delete('products',{id})
+      if (res.data.success){
+        rows.value.splice(id, 1);
+      }
+      onRequest({
+        pagination: pagination.value,
+        filter: filter.value
+      })
+      deleteLoading.value[`deleteLoading-${id}`] =  false
     }
 
     return {
@@ -350,14 +387,16 @@ export default {
       categories,
       category,
       uploadedImages,
-      imageUrls,
+      deleteLoading,
+      selectedProduct,
       onRequest,
       submit,
       uploadImages,
       onFilesPicked,
       removeUrl,
       save,
-      reset
+      reset,
+      deleteProduct
     }
   }
 }
