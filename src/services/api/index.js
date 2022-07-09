@@ -25,6 +25,7 @@ const routes = {
         'validateToken' : 'validate-token',
         'statistics' : 'statistics',
         'categories' : 'categories',
+        'orders' : 'orders',
         'image-upload' : 'imageUpload',
     },
 };
