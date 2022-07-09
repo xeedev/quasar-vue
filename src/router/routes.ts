@@ -60,6 +60,18 @@ const routes: RouteRecordRaw[] = [
       else next('/login');
     }
   },
+  {
+    path: '/orders',
+    component: () => import('layouts/DashboardLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/ManageOrdersPage.vue') },
+    ],
+    beforeEnter: async (to, from, next) =>
+    {
+      if (await IsAuthenticated()) next();
+      else next('/login');
+    }
+  },
 
   // Always leave this as last one,
   // but you can also remove it
