@@ -9,24 +9,10 @@
       height="100vh"
     >
       <q-carousel-slide
-        :name="1"
-        img-src="https://cdn.quasar.dev/img/mountains.jpg"
-      />
-      <q-carousel-slide
-        :name="2"
-        img-src="https://cdn.quasar.dev/img/parallax1.jpg"
-      />
-      <q-carousel-slide
-        :name="3"
-        img-src="https://cdn.quasar.dev/img/parallax2.jpg"
-      />
-      <q-carousel-slide
-        :name="4"
-        img-src="https://cdn.quasar.dev/img/quasar.jpg"
-      />
-      <q-carousel-slide
-        :name="5"
-        :img-src="testUrl"
+        v-for="(image,key) in images"
+        :key="key"
+        :name="key+1"
+        :img-src="image"
       />
     </q-carousel>
     <div>
@@ -149,15 +135,17 @@
 import { Todo, Meta, Category } from 'components/models';
 import ContactUs from 'src/components/ContactUs.vue';
 // import ExampleComponent from 'components/ExampleComponent.vue';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref,onMounted } from 'vue';
 import http from '../api/axios.js';
 
 import { useQuasar } from 'quasar';
+import Api from "src/services/api";
 
 export default defineComponent({
   name: 'IndexPage',
   components: { ContactUs },
   setup() {
+    const images = ref([]);
     const todos = ref<Todo[]>([
       {
         id: 1,
@@ -349,11 +337,18 @@ export default defineComponent({
     const url = process.env.ROOT_URL + '/public/media/1657039301-9RXEN7lTHA.png';
     const testUrl = url.replace("public/", "storage/");
     const $q = useQuasar();
+    onMounted(async () => {
+      let res = await Api.getList('gallery');
+      res.data.data.forEach(i => {
+        images.value.push(i.url)
+      })
+    })
     return {
       testUrl,
       todos,
       meta,
       slide,
+      images,
 
       stars: ref(5),
       tab: ref('a'),
