@@ -35,7 +35,7 @@
           <div class="flex items-center">
             <q-btn label="Login" type="submit" color="dark" />
             <q-space />
-            <span class="text-blue cursor-pointer">Forgot Password?</span>
+<!--            <span class="text-blue cursor-pointer">Forgot Password?</span>-->
           </div>
         </q-form>
       </q-card-section>
