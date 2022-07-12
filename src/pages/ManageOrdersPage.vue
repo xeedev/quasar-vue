@@ -67,7 +67,7 @@
           <div class="col-md-8 col-sm-12 col-xs-12 q-pa-md">
             <q-card-section class="custom-border">
               <q-card-section>
-                <div class="text-h6 text-dark">Order Details</div>
+                <div class="text-h6 text-dark">Order Details {{selectedOrder}}</div>
               </q-card-section>
               <q-separator inset />
               <q-card-section>
@@ -106,7 +106,7 @@
             <q-card-section class="text-center">
 
                 <q-form
-                  @submit="save"
+                  @submit="save(selectedOrder)"
                   class="q-gutter-md"
                 >
                   <div>
