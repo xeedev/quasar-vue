@@ -13,7 +13,7 @@
 
         <q-toolbar-title> Wood Surface </q-toolbar-title>
         <q-space></q-space>
-        <q-btn color="dark" label="Logout" @click="$router.push('/login')">
+        <q-btn color="dark" label="Logout" @click="logout">
           <!-- <q-menu>
             <q-list style="min-width: 100px">
               <q-item clickable v-close-popup @click="$router.push('/login')">
@@ -62,8 +62,9 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import Api from 'src/services/api';
+import { useRouter } from 'vue-router'
 // import EssentialLink from 'components/EssentialLink.vue';
-
 const linksList = [
   {
     title: 'Dashboard',
@@ -106,10 +107,16 @@ export default defineComponent({
 
   setup() {
     const leftDrawerOpen = ref(false);
+    const router = useRouter()
+    async function logout(){
+      await Api.post('logout');
+      router.push({path:'login'})
+    }
 
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
+      logout,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
