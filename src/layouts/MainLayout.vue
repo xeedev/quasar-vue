@@ -6,6 +6,7 @@
           flat
           dense
           round
+          color="dark"
           icon="menu"
           aria-label="Menu"
           v-if="!$q.screen.lg && !$q.screen.xl"
@@ -69,16 +70,18 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer reveal>
-      <q-toolbar class="bg-black text-center">
-        <q-toolbar-title
-          >©{{ new Date().getFullYear() }} Wood Surface, All rights
-          reserved</q-toolbar-title
-        >
-        <!-- <q-btn flat round dense icon="facebook" />
-        <q-btn flat round dense icon="instagram" /> -->
-      </q-toolbar>
-    </q-footer>
+<!--    <q-footer reveal>-->
+<!--      <q-toolbar class="bg-black text-center">-->
+<!--        <q-toolbar-title-->
+<!--          >-->
+<!--          ©{{ new Date().getFullYear() }} Wood Surface, All rights-->
+<!--          reserved-->
+<!--        </q-toolbar-title-->
+<!--        >-->
+<!--        &lt;!&ndash; <q-btn flat round dense icon="facebook" />-->
+<!--        <q-btn flat round dense icon="instagram" /> &ndash;&gt;-->
+<!--      </q-toolbar>-->
+<!--    </q-footer>-->
   </q-layout>
 </template>
 
