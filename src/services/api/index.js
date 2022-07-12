@@ -28,6 +28,7 @@ const routes = {
         'orders' : 'orders',
         'gallery' : 'gallery',
         'image-upload' : 'imageUpload',
+        'logout' : 'logout',
     },
 };
 
@@ -84,7 +85,7 @@ class Api {
             return false;
         }
     }
-    async post( module = null, payload = {}, app = 'ws' ) {
+    async post( module = '', payload = {}, app = 'ws' ) {
         let route = routes[app][module];
         if(route) return await http.post(`/${route}`, payload, app);
         else {
