@@ -18,7 +18,7 @@
     <div>
       <h5 class="text-center text-bold">Our Products</h5>
       <q-tabs v-model="tab" @click="updateProducts" align="justify" narrow-indicator class="q-mb-lg">
-        <template v-for="(category, index) in categoriess" :key="index">
+        <template v-for="(category, index) in categories" :key="index">
           <q-tab
             class="text-black"
             :name="category"
@@ -30,14 +30,14 @@
       <div class="q-gutter-y-sm">
         <div class="row justify-center">
           <template
-            v-for="(category, index) in categories"
+            v-for="(product, index) in products"
             :key="index"
           >
             <q-card
               class="text-dark my-card q-ma-md cursor-pointer"
               @click="$router.push('/three')"
             >
-              <q-img :src="category?.media[0]?.url" spinner-color="black" />
+              <q-img :src="product?.media[0]?.url" spinner-color="black" />
 
               <q-card-section>
                 <q-btn
@@ -50,7 +50,7 @@
 
                 <div class="row no-wrap items-center">
                   <div class="col text-h6 ellipsis">
-                    {{category.name}}
+                    {{product.name}}
                   </div>
                 </div>
 
@@ -102,6 +102,7 @@ export default defineComponent({
   components: { ContactUs },
   setup() {
     const products = ref([]);
+    const allProducts = ref([]);
     const images = ref([]);
     const todos = ref<Todo[]>([
       {
@@ -130,8 +131,7 @@ export default defineComponent({
     });
     const slide = ref(1);
     const tab = ref('all');
-    const categories = ref([]);
-    const categoriess = ref(['all']);
+    const categories = ref(['all']);
     const url = process.env.ROOT_URL + '/public/media/1657039301-9RXEN7lTHA.png';
     const testUrl = url.replace("public/", "storage/");
     const $q = useQuasar();
@@ -139,8 +139,8 @@ export default defineComponent({
       return [...new Set(xs.map(item => item.category))];
     }
     function updateProducts(){
-      categories.value = [];
-      categories.value = tab.value === 'all' ? products.value : products.value.filter( product => product.category == tab.value );
+      products.value = [];
+      products.value = tab.value === 'all' ? allProducts.value : allProducts.value.filter( product => product.category == tab.value );
     }
     onMounted(async () => {
       let res = await Api.getList('gallery');
@@ -148,15 +148,13 @@ export default defineComponent({
         images.value.push(i.url)
       })
       let response = await Api.getList('products')
+      allProducts.value = response.data.data
       products.value = response.data.data
-      categories.value = response.data.data
-      // tab.value = categories.value[0].category
       let cat = getCategories(products.value,'category')
       cat.forEach(c=>{
-        categoriess.value.push(c)
+        categories.value.push(c)
       })
 
-      console.log('categoriess.value',categoriess.value)
     })
     return {
       testUrl,
@@ -165,36 +163,12 @@ export default defineComponent({
       slide,
       images,
       products,
-      categoriess,
+      allProducts,
       getCategories,
       updateProducts,
       tab,
       stars: ref(5),
-      categories,
-      async getAll() {
-        $q.loading.show();
-        let $res = await http.login();
-        console.log($res);
-        $q.loading.hide();
-      },
-      async getDetail(id: number) {
-        $q.loading.show();
-        let $res = await http.get(id);
-        console.log($res);
-        $q.loading.hide();
-      },
-      async postText() {
-        $q.loading.show({
-          message: 'Posting comment. Please wait...',
-          spinnerColor: 'primary',
-        });
-        let $res = await http.create({
-          description: 'dummy description',
-          'added by': 'xeemax',
-        });
-        console.log($res);
-        $q.loading.hide();
-      },
+      categories
     };
   },
 });
