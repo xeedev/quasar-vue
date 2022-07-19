@@ -167,11 +167,12 @@ export default defineComponent({
       getCategories,
       updateProducts,
       tab,
-      stars: ref(5),
+      stars: ref(Math.floor(Math.random() * 5) + 1),
       categories
     };
   },
 });
+
 </script>
 <style lang="sass" scoped>
 .my-card
