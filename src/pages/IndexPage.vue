@@ -35,7 +35,7 @@
           >
             <q-card
               class="text-dark my-card q-ma-md cursor-pointer"
-              @click="$router.push('/three')"
+              @click="$router.push('/product/'+ product.id)"
             >
               <q-img :src="product?.media[0]?.url" spinner-color="black" style="height: 280px" />
 
@@ -92,6 +92,7 @@
 import { Todo, Meta, Category } from 'components/models';
 import ContactUs from 'src/components/ContactUs.vue';
 // import ExampleComponent from 'components/ExampleComponent.vue';
+import { useRouter } from 'vue-router';
 import { defineComponent, ref,onMounted } from 'vue';
 import http from '../api/axios.js';
 
