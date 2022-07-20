@@ -37,7 +37,7 @@
               class="text-dark my-card q-ma-md cursor-pointer"
               @click="$router.push('/three')"
             >
-              <q-img :src="product?.media[0]?.url" spinner-color="black" />
+              <q-img :src="product?.media[0]?.url" spinner-color="black" style="height: 280px" />
 
               <q-card-section>
                 <q-btn
@@ -54,14 +54,15 @@
                   </div>
                 </div>
 
-                <q-rating v-model="stars" :max="5" size="32px" />
+                <q-rating v-model="stars" :max="5" size="25px" />
+                <span class="q-ml-md"><strong>RS: {{product.price}}</strong></span>
               </q-card-section>
 
               <q-separator />
 
               <q-card-actions>
-                <q-btn flat round icon="event" />
-                <q-btn flat color="primary"> Read More</q-btn>
+                <q-btn flat round icon="shopping_cart" />
+                <q-btn flat color="primary"> View Details</q-btn>
               </q-card-actions>
             </q-card>
           </template>
@@ -167,7 +168,7 @@ export default defineComponent({
       getCategories,
       updateProducts,
       tab,
-      stars: ref(Math.floor(Math.random() * 5) + 1),
+      stars: ref(5),
       categories
     };
   },

@@ -26,7 +26,7 @@
             class="q-px-xl text-black q-ma-none cursor-pointer"
             @click="$router.push('/')"
           >
-            ONE
+            Home
           </p>
           <p
             class="q-px-xl text-black q-ma-none cursor-pointer"
@@ -91,9 +91,9 @@ import EssentialLink from 'components/EssentialLink.vue';
 
 const linksList = [
   {
-    title: 'ONE',
-    caption: 'quasar.dev',
-    icon: 'school',
+    title: 'Home',
+    caption: 'home page',
+    icon: 'home',
     link: '',
   },
   {
