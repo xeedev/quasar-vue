@@ -6,7 +6,7 @@
       v-model="slide"
       thumbnails
       infinite
-      height="70vh"
+      height="90vh"
     >
       <q-carousel-slide
         v-for="(image,key) in images"
@@ -42,7 +42,8 @@
               <q-card-section>
                 <q-btn
                   fab
-                  color="red"
+                  color="dark"
+                  size="10px"
                   icon="favorite"
                   class="absolute"
                   style="top: 0; right: 12px; transform: translateY(-50%)"
@@ -54,7 +55,7 @@
                   </div>
                 </div>
 
-                <q-rating v-model="stars" :max="5" size="25px" />
+                <q-rating v-model="stars" readonly color="dark" :max="5" size="25px" />
                 <span class="q-ml-md"><strong>RS: {{product.price}}</strong></span>
               </q-card-section>
 
@@ -62,7 +63,7 @@
 
               <q-card-actions>
                 <q-btn flat round icon="shopping_cart" />
-                <q-btn flat color="primary"> View Details</q-btn>
+                <q-btn flat color="dark"> View Details</q-btn>
               </q-card-actions>
             </q-card>
           </template>
@@ -70,19 +71,26 @@
       </div>
     </div>
   </div>
-  <div class="container">
-    <div class="row q-pa-xl">
+  <div class="container bg-black text-white">
+    <div class="row" :class="$q.screen.sm || $q.screen.xs ? 'q-pa-md' : 'q-pa-xl'">
       <div class="col-md-6 col-sm-12">
-        <h4 class="q-mb-none"><strong>GET IN TOUCH</strong></h4>
+        <q-img
+          src="http://woodsurface.pk/jewelry/img/logo.png"
+          spinner-color="white"
+          @click="$router.push('/')"
+          fit="contain"
+          height="150px"
+          class="q-my-sm cursor-pointer"
+          style="max-width: 150px"
+        />
         <p class="q-ma-none">
           For any kind of queries please feel free to contact us,
         </p>
-        <h6 class="q-mt-none">Pakistan</h6>
         <p class="q-mt-none"><strong>03004645434</strong></p>
         <p><strong>woodsurface99@gmail.com</strong></p>
         <p><strong>Lahore, Punjab, pakistan</strong></p>
       </div>
-      <div class="col-md-6 col-sm-12"><ContactUs /></div>
+      <div class="col-md-6 col-sm-12" :class="$q.screen.sm || $q.screen.xs ? 'full-width' : ''"><ContactUs /></div>
     </div>
   </div>
   <!-- </q-page> -->
@@ -180,4 +188,6 @@ export default defineComponent({
 .my-card
   width: 100%
   max-width: 300px
+.full-width
+  width: 100%
 </style>
