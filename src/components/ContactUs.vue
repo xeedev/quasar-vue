@@ -1,31 +1,37 @@
 <template>
-  <div>
+  <div class="form bg-white q-pa-md">
+    <h4 class="q-my-none text-black"><strong>GET IN TOUCH</strong></h4>
     <q-form
       @submit="onSubmit"
       @reset="onReset"
-      class="q-gutter-md"
+      class="q-gutter-md q-mt-md"
     >
       <q-input
-        filled
+        dense
+        outlined
+        class="bg-white"
+        clearable
         v-model="name"
         label="Your name *"
-        hint="Name and surname"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
 
       <q-input
-        filled
+        dense
+        outlined
+        clearable
         type="email"
         v-model="email"
         label="Your Email *"
-        hint="Email Address"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
 
       <q-input
-        filled
+        dense
+        outlined
+        clearable
         type="number"
         v-model="contact"
         label="Your Contact Number *"
@@ -33,6 +39,16 @@
         :rules="[
           val => val !== null && val !== '' || 'Please type your number',
         ]"
+      />
+      <q-input
+        dense
+        outlined
+        clearable
+        v-model="message"
+        label="your message *"
+        type="textarea"
+        lazy-rules
+        :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
       <div>
         <q-btn label="Submit" type="submit" color="black"/>
@@ -51,14 +67,16 @@ export default {
   setup () {
     const $q = useQuasar()
 
-    const name = ref(null)
-    const email = ref(null)
-    const contact = ref(null)
+    const name = ref('')
+    const email = ref('')
+    const contact = ref('')
+    const message = ref('')
 
     return {
       name,
       email,
       contact,
+      message,
 
       onSubmit () {
           $q.notify({
@@ -78,3 +96,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+.form{
+  border: 1px solid white;
+  border-radius: 10px;
+}
+</style>
