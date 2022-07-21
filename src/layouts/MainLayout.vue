@@ -21,7 +21,7 @@
           class="q-ma-sm cursor-pointer"
           style="max-width: 150px"
         />
-        <div class="row justify-between desktop-only">
+        <div class="row justify-between desktop-only items-center">
           <p
             class="q-px-xl text-black q-ma-none cursor-pointer"
             @click="$router.push('/')"
@@ -34,12 +34,100 @@
           >
             TWO
           </p>
-          <p
-            class="q-px-xl text-black q-ma-none cursor-pointer"
-            @click="$router.push('/login')"
-          >
-            LOGIN
-          </p>
+          <q-btn
+            fab-mini
+            class="q-mx-md"
+            icon="shopping_cart"
+            color="dark">
+          <q-menu fit>
+            <q-list style="min-width: 300px; height: 400px">
+              <q-item clickable>
+                <q-item-section>Cart Items</q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item>
+                <q-item-section>No Items</q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item>
+                <q-item-section>
+                  <div class="row items-center">
+                    <div class="col-md-2">
+                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
+                    </div>
+                    <div class="col-md-10">
+                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
+                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
+                    </div>
+                  </div>
+                </q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item>
+                <q-item-section>
+                  <div class="row items-center">
+                    <div class="col-md-2">
+                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
+                    </div>
+                    <div class="col-md-10">
+                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
+                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
+                    </div>
+                  </div>
+                </q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item>
+                <q-item-section>
+                  <div class="row items-center">
+                    <div class="col-md-2">
+                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
+                    </div>
+                    <div class="col-md-10">
+                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
+                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
+                    </div>
+                  </div>
+                </q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item>
+                <q-item-section>
+                  <div class="row items-center">
+                    <div class="col-md-2">
+                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
+                    </div>
+                    <div class="col-md-10">
+                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
+                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
+                    </div>
+                  </div>
+                </q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item>
+                <q-item-section>
+                  <div class="row items-center">
+                    <div class="col-md-2">
+                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
+                    </div>
+                    <div class="col-md-10">
+                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
+                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
+                    </div>
+                  </div>
+                </q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item>
+                <q-item-section>
+                  <q-btn class="q-mx-md" outline label="Check Out" color="dark"/>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+          </q-btn>
+          <q-btn class="q-mx-md" label="LOGIN" @click="$router.push('/login')" color="dark"/>
         </div>
       </q-toolbar>
     </q-header>
