@@ -13,7 +13,13 @@
         :key="key"
         :name="key+1"
         :img-src="image"
-      />
+      >
+        <div class="absolute-center custom-caption">
+          <div :class="$q.screen.sm || $q.screen.xs ? 'text-h6' : 'text-h2'">Premium Wooden Epoxy Products</div>
+          <div class="text-subtitle1">Wood decor & Epoxy Art</div>
+          <div class="text-subtitle2">Unique wooden Epoxy Items</div>
+        </div>
+      </q-carousel-slide>
     </q-carousel>
     <div>
       <h5 class="text-center text-bold">Our Products</h5>
@@ -190,4 +196,10 @@ export default defineComponent({
   max-width: 300px
 .full-width
   width: 100%
+.custom-caption
+  width: 100%
+  text-align: center
+  padding: 12px
+  color: white
+  background-color: rgba(0, 0, 0, .3)
 </style>
