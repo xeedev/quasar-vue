@@ -51,7 +51,7 @@
         :rules="[ val => val && val.length > 0 || 'Please type something']"
       />
       <div>
-        <q-btn label="Submit" type="submit" color="black"/>
+        <q-btn label="Submit" :loading="submitLoading" type="submit" color="black"/>
         <q-btn label="Reset" type="reset" color="black" flat class="q-ml-sm" />
       </div>
     </q-form>
@@ -62,6 +62,7 @@
 <script>
 import { useQuasar } from 'quasar'
 import { ref } from 'vue'
+import Api from 'src/services/api';
 
 export default {
   setup () {
@@ -71,27 +72,48 @@ export default {
     const email = ref('')
     const contact = ref('')
     const message = ref('')
+    const submitLoading = ref(false)
+    async function onSubmit () {
+      submitLoading.value = true
+      let res = await Api.post('general-query',{
+        'userName' : name.value,
+        'userEmail' : email.value,
+        'userContact' : contact.value,
+        'userMessage' : message.value,
+      })
+      submitLoading.value = false
+      if (res.status === 200){
+        $q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: "Thank you for contacting us, we'll get back to you shortly"
+        })
+        onReset()
+      }else {
+        $q.notify({
+          color: 'red-10',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'something went wrong'
+        })
+      }
+    }
 
+    function onReset () {
+      name.value = null
+      email.value = null
+      contact.value = null
+      message.value = null
+    }
     return {
       name,
       email,
       contact,
       message,
-
-      onSubmit () {
-          $q.notify({
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'cloud_done',
-            message: 'Submitted'
-          })
-      },
-
-      onReset () {
-        name.value = null
-        email.value = null
-        contact.value = null
-      }
+      submitLoading,
+      onSubmit,
+      onReset
     }
   }
 }

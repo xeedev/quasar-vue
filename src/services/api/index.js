@@ -29,6 +29,7 @@ const routes = {
         'gallery' : 'gallery',
         'image-upload' : 'imageUpload',
         'logout' : 'logout',
+        'general-query':'general-query'
     },
 };
 
