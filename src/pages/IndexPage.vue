@@ -16,7 +16,6 @@
       >
         <div class="absolute-center custom-caption">
           <div :class="$q.screen.sm || $q.screen.xs ? 'text-h6' : 'text-h2'">Premium Wooden Epoxy Products</div>
-          <div class="text-subtitle1">Wood decor & Epoxy Art</div>
           <div class="text-subtitle2">Unique wooden Epoxy Items</div>
         </div>
       </q-carousel-slide>
@@ -41,7 +40,7 @@
           >
             <q-card
               class="text-dark my-card q-ma-md cursor-pointer"
-              @click="$router.push('/product/'+ product.id)"
+              @click="push($event,'/product/'+ product.id)"
             >
               <q-img :src="product?.media[0]?.url" spinner-color="black" style="height: 280px" />
 
@@ -106,12 +105,12 @@
 import { Todo, Meta, Category } from 'components/models';
 import ContactUs from 'src/components/ContactUs.vue';
 // import ExampleComponent from 'components/ExampleComponent.vue';
-import { useRouter } from 'vue-router';
 import { defineComponent, ref,onMounted } from 'vue';
 import http from '../api/axios.js';
 
 import { useQuasar } from 'quasar';
 import Api from "src/services/api";
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -149,10 +148,16 @@ export default defineComponent({
     const tab = ref('all');
     const categories = ref(['all']);
     const url = process.env.ROOT_URL + '/public/media/1657039301-9RXEN7lTHA.png';
-    const testUrl = url.replace("public/", "storage/");
+    const testUrl = url.replace('public/', 'storage/');
     const $q = useQuasar();
+    const router = useRouter();
     function getCategories(xs : any, key: any) {
       return [...new Set(xs.map(item => item.category))];
+    }
+    function push(e='',path=''){
+      if (e.target.tagName !== 'I'){
+        router.push(path);
+      }
     }
     function updateProducts(){
       products.value = [];
@@ -182,6 +187,7 @@ export default defineComponent({
       allProducts,
       getCategories,
       updateProducts,
+      push,
       tab,
       stars: ref(5),
       categories
@@ -199,7 +205,11 @@ export default defineComponent({
 .custom-caption
   width: 100%
   text-align: center
-  padding: 12px
+  padding: 50px 20px
   color: white
-  background-color: rgba(0, 0, 0, .3)
+  background-color: rgba(0, 0, 0, 0.6)
+  font-family: Circular-loom
+.text-subtitle2
+  font-size: 1.375rem
+  margin-top: 20px
 </style>

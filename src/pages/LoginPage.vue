@@ -8,6 +8,7 @@
         <q-form @submit="onSubmit" class="q-gutter-md">
           <q-input
             filled
+            dense
             type="email"
             v-model="Email"
             :error-message="error"
@@ -22,6 +23,7 @@
 
           <q-input
             filled
+            dense
             type="password"
             v-model="Password"
             label="Password"

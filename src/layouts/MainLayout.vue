@@ -28,25 +28,21 @@
           >
             Home
           </p>
-          <p
-            class="q-px-xl text-black q-ma-none cursor-pointer"
-            @click="$router.push('/two')"
-          >
-            TWO
-          </p>
           <q-btn
             fab-mini
             class="q-mx-md"
+            flat
             icon="shopping_cart"
-            color="dark">
+            text-color="black"
+            >
           <q-menu fit>
             <q-list style="min-width: 300px; height: 400px">
-              <q-item clickable>
-                <q-item-section>Cart Items</q-item-section>
+              <q-item>
+                <q-item-section class="text-center text-bold">Cart Items</q-item-section>
               </q-item>
               <q-separator />
               <q-item>
-                <q-item-section>No Items</q-item-section>
+                <q-item-section class="text-center">No Items</q-item-section>
               </q-item>
               <q-separator />
               <q-item>
@@ -127,7 +123,8 @@
             </q-list>
           </q-menu>
           </q-btn>
-          <q-btn class="q-mx-md" label="LOGIN" @click="$router.push('/login')" color="dark"/>
+          <q-btn class="q-mx-md q-px-xl" rounded label="LOGIN" @click="$router.push('/login')" color="dark"/>
+          <q-btn class="q-mx-md q-px-xl" outline rounded label="REGISTER" @click="$router.push('/login')" color="dark"/>
         </div>
       </q-toolbar>
     </q-header>
@@ -177,12 +174,6 @@ const linksList = [
     caption: 'home page',
     icon: 'home',
     link: '',
-  },
-  {
-    title: 'TWO',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'TWO',
   },
   {
     title: 'Login',
