@@ -54,8 +54,10 @@ export default {
   setup() {
     onMounted(async () => {
        await Api.getList( 'validateToken').then((response) => {
-        if (response?.data?.authenticated){
+        if (response?.data?.authenticated && localStorage.getItem('token_check') === 'dapibus'){
           router.push('/dashboard');
+        }else if(response?.data?.authenticated && localStorage.getItem('token_check') === 'Pellentesque'){
+          router.push('/');
         }
       });
     })
@@ -66,12 +68,13 @@ export default {
     const Password = ref(null);
     const error = ref('');
     const isValid = ref(true);
-
     return {
       Email,
       Password,
       error,
       isValid,
+
+
 
       async onSubmit() {
         $q.loading.show();
@@ -79,12 +82,13 @@ export default {
           email : Email.value,
           password : Password.value
         });
-        console.log(res)
         if (res?.data?.error){
           isValid.value = false;
           error.value = res.data.error
-        }else if(res?.data?.data?.token){
+        }else if(res?.data?.data?.token && res?.data?.data?.me === 1){
           localStorage.setItem('token', res?.data?.data?.token);
+          localStorage.setItem('token_check', 'dapibus');
+
           $q.notify({
             color: 'green-4',
             textColor: 'white',
@@ -92,6 +96,16 @@ export default {
             message: 'Success',
           });
           router.push('/dashboard');
+        }else if(res?.data?.data?.token && res?.data?.data?.me === 0){
+          localStorage.setItem('token', res?.data?.data?.token);
+          localStorage.setItem('token_check', 'Pellentesque');
+          $q.notify({
+            color: 'green-4',
+            textColor: 'white',
+            icon: 'cloud_done',
+            message: 'Success',
+          });
+          router.push('/');
         }else{
           isValid.value = false;
           error.value = 'Something went wrong please try again'

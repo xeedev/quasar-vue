@@ -199,6 +199,8 @@ export default defineComponent({
     async function logout(){
       await Api.post('logout');
       isLoggedIn.value = false
+      localStorage.removeItem('token')
+      localStorage.removeItem('token_check')
       router.push({path:'/'})
     }
     const isLoggedIn = ref(false)

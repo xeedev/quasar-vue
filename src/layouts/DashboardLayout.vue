@@ -110,6 +110,8 @@ export default defineComponent({
     const router = useRouter()
     async function logout(){
       await Api.post('logout');
+      localStorage.removeItem('token')
+      localStorage.removeItem('token_check')
       router.push({path:'login'})
     }
 
