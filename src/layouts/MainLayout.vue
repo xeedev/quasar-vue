@@ -117,7 +117,7 @@
               <q-separator />
               <q-item>
                 <q-item-section>
-                  <q-btn class="q-mx-md" outline label="Check Out" color="dark"/>
+                  <q-btn class="q-mx-md" outline label="Check Out" color="dark" @click="$router.push('/checkout')"/>
                 </q-item-section>
               </q-item>
             </q-list>
