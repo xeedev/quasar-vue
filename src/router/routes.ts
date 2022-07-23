@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
-import Api from "src/services/api";
+import Api from 'src/services/api';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -8,9 +8,9 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
   },
   {
-    path: '/two',
+    path: '/checkout',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    children: [{ path: '', component: () => import('pages/CheckoutPage.vue') }],
   },
   {
     path: '/product/:id',
