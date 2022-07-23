@@ -36,23 +36,108 @@
       <div class="col-md-6 col-sm-12 q-px-sm">
         <h4>{{product?.name}}</h4>
         <h5 class="text-red"><strong>PKR {{product?.price}}</strong></h5>
-        <q-input
-          filled
-          type="number"
-          v-model="quantity"
-          min="1"
-          label="Quantity *"
-          hint="Enter Required quantity"
-          lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'quantity is required']"
-        />
+        <div class="row" style="width: 150px;">
+          <div class="col q-ma-md">
+            <q-input
+              outlined
+              style="width: 50px"
+              type="text"
+              readonly
+              v-model="quantity"
+              min="1"
+              lazy-rules
+              :rules="[(val) => (val && val.length > 0) || 'quantity is required']"
+            />
+          </div>
+          <div class="col q-ma-md">
+            <q-btn icon="add" size="sm" color="primary" @click="quantity++"></q-btn>
+            <q-btn icon="minimize" size="sm" color="red" @click="quantity !== 1 ? quantity-- : quantity"></q-btn>
+          </div>
+        </div>
         <div class="q-mt-lg">
           <q-btn color="black" class="q-mt-sm" label="Add to Cart" />
-          <q-btn color="brown" class="q-ml-sm q-mt-sm" label="Buy Now" />
+          <q-btn color="black" outline class="q-ml-sm q-mt-sm" label="Explore Product"  @click="alert = true" />
         </div>
       </div>
     </div>
-    <div :class="$q.screen.sm || $q.screen.xs ? 'q-pa-md' : 'row q-pa-xl'">
+    <q-dialog v-model="alert">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Send A query about this product</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <div class="row block">
+            <div class="col">
+              {{product?.detail}}
+            </div>
+            <div class="col">
+              <q-img :src="product?.media[0].url">
+              </q-img>
+            </div>
+          </div>
+          <div>
+            <q-form
+              @submit="onSubmit"
+              class="q-gutter-md q-mt-md"
+            >
+              <q-input
+                dense
+                outlined
+                class="bg-white"
+                clearable
+                v-model="name"
+                label="Your name *"
+                lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Please type something']"
+              />
+
+              <q-input
+                dense
+                outlined
+                clearable
+                type="email"
+                v-model="email"
+                label="Your Email *"
+                lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Please type something']"
+              />
+
+              <q-input
+                dense
+                outlined
+                clearable
+                type="number"
+                v-model="contact"
+                label="Your Contact Number *"
+                lazy-rules
+                :rules="[
+          val => val !== null && val !== '' || 'Please type your number',
+        ]"
+              />
+              <q-input
+                dense
+                outlined
+                clearable
+                v-model="message"
+                label="your message *"
+                type="textarea"
+                lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Please type something']"
+              />
+              <div>
+                <q-btn label="Send Query" :loading="submitLoading" type="submit" color="black"/>
+              </div>
+            </q-form>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="close" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <div style="display: block" :class="$q.screen.sm || $q.screen.xs ? 'q-pa-md' : 'row q-pa-xl'">
       <h6 class="q-py-none q-my-none">Description:</h6>
       <p>
         {{product?.detail}}
@@ -65,20 +150,71 @@
 import { ref, onMounted } from 'vue';
 import Api from '../services/api';
 import {useRouter} from 'vue-router';
+import {useQuasar} from 'quasar';
 
 export default {
   setup() {
     const router = useRouter();
+    const $q = useQuasar()
     const product = ref();
-    onMounted(async () => {
+    const name = ref();
+    const email = ref();
+    const contact = ref();
+    const message = ref();
+    const alert=  ref(false);
+    const submitLoading = ref(false)
+
+      onMounted(async () => {
       let res = await Api.getOne('products',{'id':router.currentRoute.value.params.id});
       product.value = res.data.data
     })
+    async function onSubmit () {
+      submitLoading.value = true
+      let res = await Api.post('general-query',{
+        'userName' : name.value,
+        'userEmail' : email.value,
+        'userContact' : contact.value,
+        'userMessage' : message.value,
+        'product_id' : product.value.id
+      })
+      submitLoading.value = false
+      if (res.status === 200){
+        $q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: "Thank you for contacting us, we'll get back to you shortly"
+        })
+        onReset()
+        alert.value = false
+      }else {
+        $q.notify({
+          color: 'red-10',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'something went wrong'
+        })
+      }
+    }
+    function onReset () {
+      name.value = null
+      email.value = null
+      contact.value = null
+      message.value = null
+    }
     return {
       slide: ref(1),
       fullscreen: ref(false),
       quantity: ref(1),
-      product
+      name,
+      email,
+      contact,
+      message,
+      product,
+      alert,
+      submitLoading,
+      onSubmit,
+      onReset
     };
   },
 };
