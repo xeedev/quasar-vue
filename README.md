@@ -1,7 +1,10 @@
 # Quasar App (quasar)
 
 A Quasar Project
-
+### Copy quasar.config.example.js to quasar.config.js using
+```
+cp quasar.config.example.js quasar.config.js
+```
 ## Install the dependencies
 ```bash
 yarn
