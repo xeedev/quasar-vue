@@ -84,10 +84,10 @@
                   :rules="[ val => val && val.length > 0 || 'Required']"
                 />
                 <p>
-                  Note: Please Pay 247 PKR through JazzCash at 03004645434 and type in your transaction ID for verification
+                  Note: Please Pay {{total}} PKR through JazzCash at 03004645434 and type in your transaction ID for verification
                 </p>
                 <div>
-                  <q-btn label="Order Now" :loading="submitLoading" type="submit" color="black"/>
+                  <q-btn label="Order Now" :disable="total=== 0" :loading="submitLoading" type="submit" color="black"/>
                 </div>
               </q-form>
             </div>
@@ -95,7 +95,7 @@
               <div class="custom-border q-pa-md">
                 <h5 class="q-pa-none q-ma-none">Cart Total</h5>
                 <p class="q-pt-xl text-bold">Total Payable amount</p>
-                <p class="text-bold">RS: 247/-</p>
+                <p class="text-bold">RS: {{total}}/-</p>
               </div>
             </div>
           </div>
@@ -105,16 +105,11 @@
   </q-page>
 </template>
 <script>
+import {ref} from 'vue'
+import Api from '../services/api';
+import {useQuasar} from 'quasar';
 const columns = [
-  {
-    name: 'name',
-    required: true,
-    label: 'Product',
-    align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
-    sortable: true
-  },
+  { name: 'name', required: true, label: 'Product', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true},
   { name: 'calories', align: 'center', label: 'Price', field: 'calories', sortable: true },
   { name: 'fat', label: 'Quantity', field: 'fat', sortable: true },
   { name: 'carbs', label: 'Total', field: 'carbs' },
@@ -225,9 +220,62 @@ const rows = [
 
 export default {
   setup () {
+    const $q = useQuasar()
+    const contact = ref('');
+    const address = ref('');
+    const city = ref('Lahore');
+    const country = ref('Pakistan');
+    const transaction_id = ref('');
+    const total = ref(0)
+    const description = ref('Success')
+    const submitLoading = ref(false)
+    async function orderNow(){
+      let res = await Api.post('order-now',{
+        'description' : description.value,
+        'contact' : contact.value,
+        'total' : total.value,
+        'transaction_id' : transaction_id.value,
+        'address' : address.value,
+        'city' : city.value,
+        'country' : country.value
+      })
+      if (res.status === 200){
+        $q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: "Thank you for placing your order, you'll hear from us very soon"
+        })
+        onReset()
+      }else{
+        $q.notify({
+          color: 'red-10',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'something went wrong, please try again'
+        })
+      }
+    }
+    function onReset () {
+      contact.value = null
+      address.value = null
+      city.value = null
+      country.value = null
+      transaction_id.value = null
+    }
     return {
+      contact,
+      address,
+      city,
+      country,
+      transaction_id,
       columns,
-      rows
+      rows,
+      total,
+      description,
+      submitLoading,
+      onReset,
+      orderNow
     }
   }
 }
