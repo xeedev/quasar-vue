@@ -42,3 +42,4 @@ quasar build
 
 ### Customize the configuration
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+see [How to reset committed files using .gitignore](https://betterprogramming.pub/how-to-remove-committed-files-from-git-version-control-b6533b8f9044)
