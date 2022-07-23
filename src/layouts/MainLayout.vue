@@ -123,8 +123,9 @@
             </q-list>
           </q-menu>
           </q-btn>
-          <q-btn class="q-mx-md q-px-xl" rounded label="LOGIN" @click="$router.push('/login')" color="dark"/>
-          <q-btn class="q-mx-md q-px-xl" outline rounded label="REGISTER" @click="$router.push('/login')" color="dark"/>
+          <q-btn v-if="!isLoggedIn" class="q-mx-md q-px-xl" rounded label="LOGIN" @click="$router.push('/login')" color="dark"/>
+          <q-btn v-if="isLoggedIn" class="q-mx-md" label="Logout" @click="logout" color="dark"/>
+          <q-btn v-if="!isLoggedIn" class="q-mx-md q-px-xl" outline rounded label="REGISTER" @click="$router.push('/login')" color="dark"/>
         </div>
       </q-toolbar>
     </q-header>
@@ -165,8 +166,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
+
 import EssentialLink from 'components/EssentialLink.vue';
+import Api from "src/services/api";
+import {useRouter} from "vue-router";
 
 const linksList = [
   {
@@ -191,11 +195,27 @@ export default defineComponent({
   },
 
   setup() {
+    const router = useRouter()
+    async function logout(){
+      await Api.post('logout');
+      isLoggedIn.value = false
+      router.push({path:'/'})
+    }
+    const isLoggedIn = ref(false)
+    onMounted(async () => {
+      await Api.getList( 'validateToken').then((response) => {
+        if (response?.data?.authenticated){
+          isLoggedIn.value = true
+        }
+      });
+    })
     const leftDrawerOpen = ref(false);
 
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
+      isLoggedIn,
+      logout,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
