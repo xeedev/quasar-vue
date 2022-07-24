@@ -55,13 +55,16 @@
           </div>
         </div>
         <div class="q-mt-lg">
-          <q-btn color="black" class="q-mt-sm" label="Add to Cart" />
+          <q-btn color="black" class="q-mt-sm" label="Add to Cart" @click="addToCart(product)" />
           <q-btn color="black" outline class="q-ml-sm q-mt-sm" label="Explore Product"  @click="alert = true" />
         </div>
       </div>
     </div>
     <q-dialog v-model="alert">
       <q-card>
+        <q-card-actions align="right">
+          <q-btn flat icon="close" color="primary" v-close-popup />
+        </q-card-actions>
         <q-card-section>
           <div class="text-h6">Send A query about this product</div>
         </q-card-section>
@@ -131,10 +134,6 @@
             </q-form>
           </div>
         </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="close" color="primary" v-close-popup />
-        </q-card-actions>
       </q-card>
     </q-dialog>
     <div style="display: block" :class="$q.screen.sm || $q.screen.xs ? 'q-pa-md' : 'row q-pa-xl'">
@@ -151,13 +150,16 @@ import { ref, onMounted } from 'vue';
 import Api from '../services/api';
 import {useRouter} from 'vue-router';
 import {useQuasar} from 'quasar';
+import {useCartStore} from '../stores/useCart';
 
 export default {
   setup() {
+    const cart = useCartStore();
     const router = useRouter();
     const $q = useQuasar()
     const product = ref();
     const name = ref();
+    const quantity = ref(1);
     const email = ref();
     const contact = ref();
     const message = ref();
@@ -202,10 +204,26 @@ export default {
       contact.value = null
       message.value = null
     }
+    async function addToCart(product) {
+
+        let cartItem = {
+          'name' : product.name,
+          'price' : product.price,
+          'quantity' : quantity.value,
+          'total' : product.price * quantity.value,
+          'image' : product.media[0].url,
+        }
+        cart.addToCart(cartItem)
+        $q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'Product added to cart',
+        });
+    }
     return {
       slide: ref(1),
       fullscreen: ref(false),
-      quantity: ref(1),
       name,
       email,
       contact,
@@ -213,6 +231,8 @@ export default {
       product,
       alert,
       submitLoading,
+      quantity,
+      addToCart,
       onSubmit,
       onReset
     };
