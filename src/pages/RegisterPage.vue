@@ -79,6 +79,7 @@
 <script lang="ts">
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
+import {useAuthStore} from 'stores/useAuth'
 import Api from '../services/api/index'
 import { ref, onMounted } from 'vue';
 
@@ -102,6 +103,7 @@ export default {
     const Password = ref(null);
     const error = ref('');
     const isValid = ref(true);
+    const store = useAuthStore();
     return {
       Email,
       name,
@@ -117,7 +119,6 @@ export default {
           c_password : confirm_password.value,
           name : name.value,
         });
-        console.log(res?.data?.message == 'Validation Error.')
         // return false;
         if (res?.data?.error){
           isValid.value = false;
@@ -138,6 +139,7 @@ export default {
         }else if(res?.data?.data?.token && res?.data?.data?.me === 0 || res?.data?.data?.me === null){
           localStorage.setItem('token', res?.data?.data?.token);
           localStorage.setItem('token_check', 'Pellentesque');
+          store.changeAuthStatus(true)
           $q.notify({
             color: 'green-4',
             textColor: 'white',
