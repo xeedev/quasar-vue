@@ -55,6 +55,7 @@
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import Api from '../services/api/index'
+import {useAuthStore} from 'stores/useAuth'
 import { ref, onMounted } from 'vue';
 
 export default {
@@ -70,6 +71,7 @@ export default {
     })
     const $q = useQuasar();
     const router = useRouter();
+    const store = useAuthStore();
 
     const Email = ref(null);
     const Password = ref(null);
@@ -104,6 +106,7 @@ export default {
           });
           router.push('/dashboard');
         }else if(res?.data?.data?.token && res?.data?.data?.me === 0){
+          store.changeAuthStatus(true)
           localStorage.setItem('token', res?.data?.data?.token);
           localStorage.setItem('token_check', 'Pellentesque');
           $q.notify({
