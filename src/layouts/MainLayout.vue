@@ -125,7 +125,7 @@
           </q-btn>
           <q-btn v-if="!isLoggedIn" class="q-mx-md q-px-xl" rounded label="LOGIN" @click="$router.push('/login')" color="dark"/>
           <q-btn v-if="isLoggedIn" class="q-mx-md" label="Logout" @click="logout" color="dark"/>
-          <q-btn v-if="!isLoggedIn" class="q-mx-md q-px-xl" outline rounded label="REGISTER" @click="$router.push('/login')" color="dark"/>
+          <q-btn v-if="!isLoggedIn" class="q-mx-md q-px-xl" outline rounded label="REGISTER" @click="$router.push('/register')" color="dark"/>
         </div>
       </q-toolbar>
     </q-header>

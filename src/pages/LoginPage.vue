@@ -2,8 +2,16 @@
   <div class="q-py-xl">
     <q-card
       :style="$q.screen.sm || $q.screen.xs ? '' : { width: '350px' }"
-      class="ma-auto-0 q-py-xl"
+      class="ma-auto-0 q-py-xl text-center"
     >
+      <q-img
+        src="http://woodsurface.pk/jewelry/img/logo.png"
+        spinner-color="white"
+        @click="$router.push('/')"
+        fit="contain"
+        width="100px"
+        class="q-ma-sm cursor-pointer"
+      />
       <q-card-section>
         <q-form @submit="onSubmit" class="q-gutter-md">
           <q-input
@@ -34,9 +42,8 @@
             ]"
           />
 
-          <div class="flex items-center">
-            <q-btn label="Login" type="submit" color="dark" />
-            <q-space />
+          <div class="flex justify-center">
+            <q-btn label="Login" class="q-px-xl" style="width: 60%" type="submit" color="dark" />
 <!--            <span class="text-blue cursor-pointer">Forgot Password?</span>-->
           </div>
         </q-form>
