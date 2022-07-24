@@ -13,7 +13,7 @@
           @click="toggleLeftDrawer"
         />
         <q-img
-          src="http://woodsurface.pk/jewelry/img/logo.png"
+          src="logo.png"
           spinner-color="white"
           @click="$router.push('/')"
           fit="contain"
@@ -41,81 +41,26 @@
                 <q-item-section class="text-center text-bold">Cart Items</q-item-section>
               </q-item>
               <q-separator />
-              <q-item>
+              <q-item v-if="cart.cartItems.length === 0">
                 <q-item-section class="text-center">No Items</q-item-section>
               </q-item>
-              <q-separator />
-              <q-item>
-                <q-item-section>
-                  <div class="row items-center">
-                    <div class="col-md-2">
-                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
+              <template v-else v-for="(cart, index) in cart.cartItems" :key="index">
+                <q-separator />
+                <q-item>
+                  <q-item-section>
+                    <div class="row items-center">
+                      <div class="col-md-2">
+                        <q-img height="50px" width="50px" :src="cart.image" />
+                      </div>
+                      <div class="col-md-10">
+                        <h6 class="q-ml-md q-pa-none q-ma-none">{{cart.name}}</h6>
+                        <span class="q-ml-md q-pa-none q-ma-none">PKR: {{cart.price}}</span> <span><q-badge color="red">{{cart.quantity}}</q-badge></span>
+                      </div>
                     </div>
-                    <div class="col-md-10">
-                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
-                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
-                    </div>
-                  </div>
-                </q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item>
-                <q-item-section>
-                  <div class="row items-center">
-                    <div class="col-md-2">
-                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
-                    </div>
-                    <div class="col-md-10">
-                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
-                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
-                    </div>
-                  </div>
-                </q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item>
-                <q-item-section>
-                  <div class="row items-center">
-                    <div class="col-md-2">
-                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
-                    </div>
-                    <div class="col-md-10">
-                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
-                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
-                    </div>
-                  </div>
-                </q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item>
-                <q-item-section>
-                  <div class="row items-center">
-                    <div class="col-md-2">
-                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
-                    </div>
-                    <div class="col-md-10">
-                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
-                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
-                    </div>
-                  </div>
-                </q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item>
-                <q-item-section>
-                  <div class="row items-center">
-                    <div class="col-md-2">
-                      <q-img height="50px" width="50px" src="http://127.0.0.1:8000/storage/media/1657614168-b5Z4r9sC2Y.jpg" />
-                    </div>
-                    <div class="col-md-10">
-                      <h6 class="q-ml-md q-pa-none q-ma-none">Item Name Here</h6>
-                      <p class="q-ml-md q-pa-none q-ma-none">PKR: 756</p>
-                    </div>
-                  </div>
-                </q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <q-item v-if="cart.cartItems.length">
                 <q-item-section>
                   <q-btn class="q-mx-md" outline label="Check Out" color="dark" @click="$router.push('/checkout')"/>
                 </q-item-section>
@@ -172,6 +117,7 @@ import EssentialLink from 'components/EssentialLink.vue';
 import Api from 'src/services/api';
 import {useRouter} from 'vue-router';
 import {useAuthStore} from 'stores/useAuth';
+import {useCartStore} from 'stores/useCart';
 
 const linksList = [
   {
@@ -197,6 +143,7 @@ export default defineComponent({
 
   setup() {
     const store = useAuthStore();
+    const cart = useCartStore();
     const router = useRouter()
     async function logout(){
       await Api.post('logout');
@@ -221,6 +168,7 @@ export default defineComponent({
       leftDrawerOpen,
       isLoggedIn,
       store,
+      cart,
       logout,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
