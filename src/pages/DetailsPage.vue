@@ -36,10 +36,14 @@
       <div class="col-md-6 col-sm-12 q-px-sm">
         <h4>{{product?.name}}</h4>
         <h5 class="text-red"><strong>PKR {{product?.price}}</strong></h5>
-        <div class="row" style="width: 150px;">
-          <div class="col q-ma-md">
+        <div class="row" style="width: 250px">
+          <div class="col">
+            <q-btn icon="minimize" size="md" color="red" @click="quantity !== 1 ? quantity-- : quantity"></q-btn>
+          </div>
+          <div class="col">
             <q-input
               outlined
+              dense
               style="width: 50px"
               type="text"
               readonly
@@ -49,9 +53,8 @@
               :rules="[(val) => (val && val.length > 0) || 'quantity is required']"
             />
           </div>
-          <div class="col q-ma-md">
-            <q-btn icon="add" size="sm" color="primary" @click="quantity++"></q-btn>
-            <q-btn icon="minimize" size="sm" color="red" @click="quantity !== 1 ? quantity-- : quantity"></q-btn>
+          <div class="col">
+            <q-btn icon="add" size="md" color="primary" @click="quantity++"></q-btn>
           </div>
         </div>
         <div class="q-mt-lg">
@@ -63,7 +66,7 @@
     <q-dialog v-model="alert">
       <q-card>
         <q-card-actions align="right">
-          <q-btn flat icon="close" color="primary" v-close-popup />
+          <q-btn icon="close" style="min-width: 3px" size="5px" color="dark" v-close-popup />
         </q-card-actions>
         <q-card-section>
           <div class="text-h6">Send A query about this product</div>
@@ -151,10 +154,12 @@ import Api from '../services/api';
 import {useRouter} from 'vue-router';
 import {useQuasar} from 'quasar';
 import {useCartStore} from '../stores/useCart';
+import {useAuthStore} from "../stores/useAuth";
 
 export default {
   setup() {
     const cart = useCartStore();
+    const store = useAuthStore();
     const router = useRouter();
     const $q = useQuasar()
     const product = ref();
@@ -205,7 +210,7 @@ export default {
       message.value = null
     }
     async function addToCart(product) {
-
+      if (store.isAuthenticated){
         let cartItem = {
           'name' : product.name,
           'price' : product.price,
@@ -220,6 +225,14 @@ export default {
           icon: 'cloud_done',
           message: 'Product added to cart',
         });
+      }else{
+        $q.notify({
+          color: 'red-10',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'Please login to add to cart',
+        });
+      }
     }
     return {
       slide: ref(1),
@@ -232,6 +245,7 @@ export default {
       alert,
       submitLoading,
       quantity,
+      store,
       addToCart,
       onSubmit,
       onReset
