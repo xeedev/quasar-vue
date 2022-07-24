@@ -67,7 +67,7 @@
               <q-separator />
 
               <q-card-actions>
-                <q-btn flat round icon="shopping_cart" />
+                <q-btn flat round :loading="addingToCart" icon="shopping_cart" @click="addToCart(product.id)" />
                 <q-btn flat color="dark"> View Details</q-btn>
               </q-card-actions>
             </q-card>
@@ -80,7 +80,7 @@
     <div class="row" :class="$q.screen.sm || $q.screen.xs ? 'q-pa-md' : 'q-pa-xl'">
       <div class="col-md-6 col-sm-12">
         <q-img
-          src="http://woodsurface.pk/jewelry/img/logo.png"
+          src="logo.png"
           spinner-color="white"
           @click="$router.push('/')"
           fit="contain"
@@ -102,53 +102,25 @@
 </template>
 
 <script lang="ts">
-import { Todo, Meta, Category } from 'components/models';
 import ContactUs from 'src/components/ContactUs.vue';
-// import ExampleComponent from 'components/ExampleComponent.vue';
 import { defineComponent, ref,onMounted } from 'vue';
-import http from '../api/axios.js';
-
 import { useQuasar } from 'quasar';
-import Api from "src/services/api";
+import Api from 'src/services/api';
 import { useRouter } from 'vue-router';
+import {useCartStore} from 'stores/useCart';
 
 export default defineComponent({
   name: 'IndexPage',
   components: { ContactUs },
   setup() {
+    const cart = useCartStore();
     const products = ref([]);
     const allProducts = ref([]);
     const images = ref([]);
-    const todos = ref<Todo[]>([
-      {
-        id: 1,
-        content: 'ct1',
-      },
-      {
-        id: 2,
-        content: 'ct2',
-      },
-      {
-        id: 3,
-        content: 'ct3',
-      },
-      {
-        id: 4,
-        content: 'ct4',
-      },
-      {
-        id: 5,
-        content: 'ct5',
-      },
-    ]);
-    const meta = ref<Meta>({
-      totalCount: 1200,
-    });
     const slide = ref(1);
     const tab = ref('all');
+    const addingToCart = ref(false);
     const categories = ref(['all']);
-    const url = process.env.ROOT_URL + '/public/media/1657039301-9RXEN7lTHA.png';
-    const testUrl = url.replace('public/', 'storage/');
     const $q = useQuasar();
     const router = useRouter();
     function getCategories(xs : any, key: any) {
@@ -177,20 +149,47 @@ export default defineComponent({
       })
 
     })
+    async function addToCart(id:number){
+      addingToCart.value = true;
+      let response = await Api.getOne('products', {id})
+      if (response.data.success){
+        let cartItem = {
+          'name' : response?.data?.data?.name,
+          'price' : response?.data?.data?.price,
+          'image' : response?.data?.data?.media[0].url,
+          'quantity' : 1,
+          'total' : response?.data?.data?.price,
+        }
+        cart.addToCart(cartItem)
+        $q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'Product added to cart',
+        });
+      }else{
+        $q.notify({
+          color: 'red-10',
+          textColor: 'white',
+          icon: 'cloud_done',
+          message: 'Something Went Wrong',
+        });
+      }
+      addingToCart.value = false;
+    }
     return {
-      testUrl,
-      todos,
-      meta,
       slide,
       images,
       products,
       allProducts,
-      getCategories,
-      updateProducts,
-      push,
+      addingToCart,
+      cart,
       tab,
       stars: ref(5),
-      categories
+      categories,
+      addToCart,
+      updateProducts,
+      push
     };
   },
 });
@@ -208,7 +207,7 @@ export default defineComponent({
   padding: 50px 20px
   color: white
   background-color: rgba(0, 0, 0, 0.6)
-  font-family: Circular-loom
+  font-family: Circular-loom,serif
 .text-subtitle2
   font-size: 1.375rem
   margin-top: 20px
