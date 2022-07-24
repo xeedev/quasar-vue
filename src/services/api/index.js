@@ -64,7 +64,7 @@ class Api {
             return false;
         }
     }
-    async getOne( module = null, payload = {}, app = 'ws' ) {
+    async getOne( module = '', payload = {}, app = 'ws' ) {
         if(!payload.hasOwnProperty('id')) {
             console.log('No id found');
             return false;
