@@ -41,7 +41,7 @@ class Api {
     }
 
     async signup(credentials) {
-        return await http.post('/signup', credentials, 'ws');
+        return await http.post('/register', credentials, 'ws');
     }
 
     async logout(payload) {
