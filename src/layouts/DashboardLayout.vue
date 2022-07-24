@@ -30,7 +30,7 @@
       <q-list>
         <q-item-label header>
           <q-img
-            src="http://woodsurface.pk/jewelry/img/logo.png"
+            src="logo.png"
             spinner-color="white"
             @click="$router.push('/dashboard')"
             fit="contain"
