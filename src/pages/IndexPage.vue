@@ -108,12 +108,14 @@ import { useQuasar } from 'quasar';
 import Api from 'src/services/api';
 import { useRouter } from 'vue-router';
 import {useCartStore} from 'stores/useCart';
+import {useAuthStore} from "stores/useAuth";
 
 export default defineComponent({
   name: 'IndexPage',
   components: { ContactUs },
   setup() {
     const cart = useCartStore();
+    const store = useAuthStore();
     const products = ref([]);
     const allProducts = ref([]);
     const images = ref([]);
@@ -150,32 +152,41 @@ export default defineComponent({
 
     })
     async function addToCart(id:number){
-      addingToCart.value = true;
-      let response = await Api.getOne('products', {id})
-      if (response.data.success){
-        let cartItem = {
-          'name' : response?.data?.data?.name,
-          'price' : response?.data?.data?.price,
-          'image' : response?.data?.data?.media[0].url,
-          'quantity' : 1,
-          'total' : response?.data?.data?.price,
+      if (store.isAuthenticated){
+        addingToCart.value = true;
+        let response = await Api.getOne('products', {id})
+        if (response.data.success){
+          let cartItem = {
+            'name' : response?.data?.data?.name,
+            'price' : response?.data?.data?.price,
+            'image' : response?.data?.data?.media[0].url,
+            'quantity' : 1,
+            'total' : response?.data?.data?.price,
+          }
+          cart.addToCart(cartItem)
+          $q.notify({
+            color: 'green-4',
+            textColor: 'white',
+            icon: 'cloud_done',
+            message: 'Product added to cart',
+          });
+        }else{
+          $q.notify({
+            color: 'red-10',
+            textColor: 'white',
+            icon: 'cloud_done',
+            message: 'Something Went Wrong',
+          });
         }
-        cart.addToCart(cartItem)
-        $q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'cloud_done',
-          message: 'Product added to cart',
-        });
+        addingToCart.value = false;
       }else{
         $q.notify({
           color: 'red-10',
           textColor: 'white',
           icon: 'cloud_done',
-          message: 'Something Went Wrong',
+          message: 'Please Login to add to cart',
         });
       }
-      addingToCart.value = false;
     }
     return {
       slide,
@@ -187,6 +198,7 @@ export default defineComponent({
       tab,
       stars: ref(5),
       categories,
+      store,
       addToCart,
       updateProducts,
       push
