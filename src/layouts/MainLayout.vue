@@ -123,9 +123,9 @@
             </q-list>
           </q-menu>
           </q-btn>
-          <q-btn v-if="!isLoggedIn" class="q-mx-md q-px-xl" rounded label="LOGIN" @click="$router.push('/login')" color="dark"/>
-          <q-btn v-if="isLoggedIn" class="q-mx-md" label="Logout" @click="logout" color="dark"/>
-          <q-btn v-if="!isLoggedIn" class="q-mx-md q-px-xl" outline rounded label="REGISTER" @click="$router.push('/register')" color="dark"/>
+          <q-btn v-if="!store.isAuthenticated" class="q-mx-md q-px-xl" rounded label="LOGIN" @click="$router.push('/login')" color="dark"/>
+          <q-btn v-if="store.isAuthenticated" class="q-mx-md" label="Logout" @click="logout" color="dark"/>
+          <q-btn v-if="!store.isAuthenticated" class="q-mx-md q-px-xl" outline rounded label="REGISTER" @click="$router.push('/register')" color="dark"/>
         </div>
       </q-toolbar>
     </q-header>
@@ -169,8 +169,9 @@
 import {defineComponent, onMounted, ref} from 'vue';
 
 import EssentialLink from 'components/EssentialLink.vue';
-import Api from "src/services/api";
-import {useRouter} from "vue-router";
+import Api from 'src/services/api';
+import {useRouter} from 'vue-router';
+import {useAuthStore} from 'stores/useAuth';
 
 const linksList = [
   {
@@ -195,10 +196,12 @@ export default defineComponent({
   },
 
   setup() {
+    const store = useAuthStore();
     const router = useRouter()
     async function logout(){
       await Api.post('logout');
       isLoggedIn.value = false
+      store.changeAuthStatus(false)
       localStorage.removeItem('token')
       localStorage.removeItem('token_check')
       router.push({path:'/'})
@@ -207,7 +210,7 @@ export default defineComponent({
     onMounted(async () => {
       await Api.getList( 'validateToken').then((response) => {
         if (response?.data?.authenticated){
-          isLoggedIn.value = true
+          store.changeAuthStatus(true)
         }
       });
     })
@@ -217,6 +220,7 @@ export default defineComponent({
       essentialLinks: linksList,
       leftDrawerOpen,
       isLoggedIn,
+      store,
       logout,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
