@@ -62,9 +62,9 @@ export default {
   setup() {
     onMounted(async () => {
        await Api.getList( 'validateToken').then((response) => {
-        if (response?.data?.authenticated && localStorage.getItem('token_check') === 'dapibus'){
+        if (response?.data?.authenticated && localStorage.getItem('token_check') === process.env.ADMIN){
           router.push('/dashboard');
-        }else if(response?.data?.authenticated && localStorage.getItem('token_check') === 'Pellentesque'){
+        }else if(response?.data?.authenticated && localStorage.getItem('token_check') === process.env.USER){
           router.push('/');
         }
       });
@@ -96,7 +96,7 @@ export default {
           error.value = res.data.error
         }else if(res?.data?.data?.token && res?.data?.data?.me === 1){
           localStorage.setItem('token', res?.data?.data?.token);
-          localStorage.setItem('token_check', 'dapibus');
+          localStorage.setItem('token_check', process.env.ADMIN!);
 
           $q.notify({
             color: 'green-4',
@@ -108,7 +108,7 @@ export default {
         }else if(res?.data?.data?.token && res?.data?.data?.me === 0){
           store.changeAuthStatus(true)
           localStorage.setItem('token', res?.data?.data?.token);
-          localStorage.setItem('token_check', 'Pellentesque');
+          localStorage.setItem('token_check', process.env.USER!);
           $q.notify({
             color: 'green-4',
             textColor: 'white',
