@@ -128,11 +128,12 @@ export default {
     const country = ref('Pakistan');
     const transaction_id = ref('');
     const total = ref(0)
-    const description = ref('Success')
+    const description = ref('')
     const submitLoading = ref(false)
     rows.value = cart.cartItems
     cart.cartItems.forEach(item => {
       total.value += parseInt(item.total)
+      description.value += ' ' + item.quantity+'x ' + item.name + '.'
     })
     async function orderNow(){
       let res = await Api.post('order-now',{
@@ -167,6 +168,8 @@ export default {
       city.value = null
       country.value = null
       transaction_id.value = null
+      cart.emptyCart()
+      total.value = 0
     }
     return {
       contact,
