@@ -21,6 +21,46 @@
           class="q-ma-sm cursor-pointer"
           style="max-width: 150px"
         />
+        <q-btn
+          fab-mini
+          class="q-mx-md mobile-only"
+          flat
+          icon="shopping_cart"
+          text-color="black"
+        >
+          <q-menu fit>
+            <q-list style="min-width: 300px; height: 400px">
+              <q-item>
+                <q-item-section class="text-center text-bold">Cart Items</q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item v-if="cart.cartItems.length === 0">
+                <q-item-section class="text-center">No Items</q-item-section>
+              </q-item>
+              <template v-else v-for="(cart, index) in cart.cartItems" :key="index">
+                <q-separator />
+                <q-item>
+                  <q-item-section>
+                    <div class="row items-center">
+                      <div class="col-md-2">
+                        <q-img height="50px" width="50px" :src="cart.image" />
+                      </div>
+                      <div class="col-md-10">
+                        <h6 class="q-ml-md q-pa-none q-ma-none">{{cart.name}}</h6>
+                        <span class="q-ml-md q-pa-none q-ma-none">PKR: {{cart.price}}</span> <span><q-badge color="red">{{cart.quantity}}</q-badge></span>
+                      </div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </template>
+              <q-item v-if="cart.cartItems.length">
+                <q-item-section>
+                  <q-btn class="q-mx-md" outline label="Check Out" color="dark" @click="$router.push('/checkout')"/>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
         <div class="row justify-between desktop-only items-center">
           <p
             class="q-px-xl text-black q-ma-none cursor-pointer"
@@ -95,18 +135,35 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-<!--    <q-footer reveal>-->
-<!--      <q-toolbar class="bg-black text-center">-->
-<!--        <q-toolbar-title-->
-<!--          >-->
-<!--          ©{{ new Date().getFullYear() }} Wood Surface, All rights-->
-<!--          reserved-->
-<!--        </q-toolbar-title-->
-<!--        >-->
-<!--        &lt;!&ndash; <q-btn flat round dense icon="facebook" />-->
-<!--        <q-btn flat round dense icon="instagram" /> &ndash;&gt;-->
-<!--      </q-toolbar>-->
-<!--    </q-footer>-->
+    <div class="bg-black block text-center">
+      <div class="col text-white text-h6">
+        <span>
+          <a href="https://www.instagram.com/woodsurface/?igshid=YmMyMTA2M2Y%3D" target="_blank">
+                      <q-btn
+                        fab-mini
+                        class="q-mx-md"
+                        flat
+                        icon="ti-instagram"
+                        text-color="white"
+                      />
+          </a>
+        </span>
+        <span>
+          <a href="https://www.facebook.com/woodsurface/" target="_blank">
+                      <q-btn
+                        fab-mini
+                        class="q-mx-md"
+                        flat
+                        icon="ti-facebook"
+                        text-color="white"
+                      />
+          </a>
+        </span>
+      </div>
+    </div>
+    <div class="bg-black block text-center">
+      <div class="col text-white text-h6">© All Rights Reserved - Wood Surface</div>
+    </div>
   </q-layout>
 </template>
 
