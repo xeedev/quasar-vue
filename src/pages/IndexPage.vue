@@ -91,7 +91,8 @@
         <p class="q-ma-none">
           For any kind of queries please feel free to contact us,
         </p>
-        <p class="q-mt-none"><strong>03004645434</strong></p>
+        <p class="q-mt-md"><strong>03004645434</strong></p>
+        <p class="q-mt-none"><strong>0335 5044404</strong></p>
         <p><strong>woodsurface99@gmail.com</strong></p>
         <p><strong>Lahore, Punjab, pakistan</strong></p>
       </div>
@@ -108,7 +109,7 @@ import { useQuasar } from 'quasar';
 import Api from 'src/services/api';
 import { useRouter } from 'vue-router';
 import {useCartStore} from 'stores/useCart';
-import {useAuthStore} from "stores/useAuth";
+import {useAuthStore} from 'stores/useAuth';
 
 export default defineComponent({
   name: 'IndexPage',
