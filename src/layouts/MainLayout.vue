@@ -132,6 +132,12 @@ const linksList = [
     icon: 'user',
     link: 'login',
   },
+  {
+    title: 'Register',
+    caption: 'signup',
+    icon: 'user',
+    link: 'register',
+  },
 ];
 
 export default defineComponent({
