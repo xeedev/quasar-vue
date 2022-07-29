@@ -124,11 +124,45 @@
       <q-list>
         <q-item-label header> Essential Links </q-item-label>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <q-item clickable @click="$router.push('/')">
+          <q-item-section avatar>
+            <q-icon name="home" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>Home</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable @click="$router.push('/login')" v-if="!store.isAuthenticated">
+          <q-item-section avatar>
+            <q-icon name="login" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>Login</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable @click="$router.push('/register')" v-if="!store.isAuthenticated">
+          <q-item-section avatar>
+            <q-icon name="person_add" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>Register</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable @click="logout" v-if="store.isAuthenticated">
+          <q-item-section avatar>
+            <q-icon name="logout" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>Logout</q-item-label>
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
@@ -170,39 +204,12 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 
-import EssentialLink from 'components/EssentialLink.vue';
 import Api from 'src/services/api';
 import {useRouter} from 'vue-router';
 import {useAuthStore} from 'stores/useAuth';
 import {useCartStore} from 'stores/useCart';
-
-const linksList = [
-  {
-    title: 'Home',
-    caption: 'home page',
-    icon: 'home',
-    link: '',
-  },
-  {
-    title: 'Login',
-    caption: 'Login',
-    icon: 'user',
-    link: 'login',
-  },
-  {
-    title: 'Register',
-    caption: 'signup',
-    icon: 'user',
-    link: 'register',
-  },
-];
-
 export default defineComponent({
   name: 'MainLayout',
-
-  components: {
-    EssentialLink,
-  },
 
   setup() {
     const store = useAuthStore();
@@ -227,7 +234,6 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
 
     return {
-      essentialLinks: linksList,
       leftDrawerOpen,
       isLoggedIn,
       store,
