@@ -95,7 +95,6 @@
         <p class="q-mt-none"><strong>0335 5044404</strong></p>
         <p><strong>woodsurface99@gmail.com</strong></p>
         <p><strong>Lahore, Punjab, pakistan</strong></p>
-        <p><span class="text-black" v-if="$q.screen.lg">Lahore,</span><span v-if="$q.screen.xl" class="text-black">Pakistan</span></p>
       </div>
       <div class="col-md-6 col-sm-12" :class="$q.screen.sm || $q.screen.xs ? 'full-width' : ''"><ContactUs /></div>
     </div>

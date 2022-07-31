@@ -119,7 +119,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      v-if="!$q.screen.lg && !$q.screen.xl"
+      v-if="!$q.screen.lg && !$q.screen.xl && !$q.screen.md"
     >
       <q-list>
         <q-item-label header> Essential Links </q-item-label>
