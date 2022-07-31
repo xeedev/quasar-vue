@@ -9,7 +9,7 @@
           color="dark"
           icon="menu"
           aria-label="Menu"
-          v-if="!$q.screen.lg && !$q.screen.xl"
+          v-if="!$q.screen.lg && !$q.screen.xl && !$q.screen.md"
           @click="toggleLeftDrawer"
         />
         <q-img
@@ -172,7 +172,7 @@
     <div class="bg-black block text-center">
       <div class="col text-white text-h6">
         <span>
-          <a href="https://www.instagram.com/woodsurface/?igshid=YmMyMTA2M2Y%3D" target="_blank">
+          <a href="https://www.instagram.com/woodsurface/?igshid=YmMyMTA2M2Y%3D" target="_blank" style="text-decoration: none">
                       <q-btn
                         fab-mini
                         class="q-mx-md"
@@ -183,7 +183,7 @@
           </a>
         </span>
         <span>
-          <a href="https://www.facebook.com/woodsurface/" target="_blank">
+          <a href="https://www.facebook.com/woodsurface/" target="_blank" style="text-decoration: none">
                       <q-btn
                         fab-mini
                         class="q-mx-md"
@@ -242,6 +242,7 @@ export default defineComponent({
       isLoggedIn,
       store,
       cart,
+      $q,
       logout,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
