@@ -208,13 +208,16 @@ import Api from 'src/services/api';
 import {useRouter} from 'vue-router';
 import {useAuthStore} from 'stores/useAuth';
 import {useCartStore} from 'stores/useCart';
+import {useQuasar} from 'quasar';
 export default defineComponent({
   name: 'MainLayout',
 
   setup() {
+    const leftDrawerOpen = ref(false);
     const store = useAuthStore();
     const cart = useCartStore();
     const router = useRouter()
+    const $q = useQuasar();
     async function logout(){
       await Api.post('logout');
       isLoggedIn.value = false
@@ -230,8 +233,9 @@ export default defineComponent({
           store.changeAuthStatus(true)
         }
       });
+      leftDrawerOpen.value = false
+      console.log('quasar info',$q.screen)
     })
-    const leftDrawerOpen = ref(false);
 
     return {
       leftDrawerOpen,
