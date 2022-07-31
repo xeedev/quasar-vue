@@ -32,6 +32,7 @@ import { ref, onMounted } from 'vue'
 import Api from '../services/api';
 import {useQuasar} from 'quasar';
 import axios from 'axios';
+import imageCompression from 'browser-image-compression';
 
 export default {
   setup () {
@@ -47,14 +48,22 @@ export default {
       this.onFilesPicked(event);
     }
     async  function  onFilesPicked (event) {
-      const files = event.target.files;
+      let files = event.target.files;
+      let formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        let file = files[i];
+        file = await compressFile(file);
+        console.log(file);
+        formData.append('files[]', file);
+      }
+
       if (!files.length) {
         return;
       }
 
       $q.loading.show();
       axios
-        .post(process.env.BASE_URL+'/imageUpload', files, {
+        .post(process.env.BASE_URL+'/imageUpload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: 'Bearer ' + localStorage.getItem('token'),
@@ -70,6 +79,27 @@ export default {
         });
       $q.loading.hide();
     }
+     const compressFile = (imageFile) => {
+       let size = imageFile.size / 1024 / 1024; // in MiB
+       if (size < 0.2) {
+         return imageFile;
+       }
+
+       return new Promise((resolve, reject) => {
+         let options = {
+           maxSizeMB: 0.1,
+           maxWidthOrHeight: 1920,
+           useWebWorker: true
+         };
+         imageCompression(imageFile, options)
+           .then(function(compressedFile) {
+             resolve(compressedFile);
+           })
+           .catch(function(error) {
+             reject(error.message);
+           });
+       });
+     };
     function removeUrl(index){
       images.value.splice(index, 1);
     }
@@ -77,7 +107,8 @@ export default {
       images,
       removeUrl,
       onFilesPicked,
-      uploadImages
+      uploadImages,
+      compressFile
     }
   }
 }
