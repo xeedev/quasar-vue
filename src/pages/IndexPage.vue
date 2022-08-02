@@ -67,7 +67,7 @@
               <q-separator />
 
               <q-card-actions>
-                <q-btn flat round :loading="addingToCart" icon="shopping_cart" @click="addToCart(product.id)" />
+                <q-btn flat round :loading="addingToCart[`addingToCart-${product.id}`]" icon="shopping_cart" @click="addToCart(product.id)" />
                 <q-btn flat color="dark"> View Details</q-btn>
               </q-card-actions>
             </q-card>
@@ -122,7 +122,7 @@ export default defineComponent({
     const images = ref([]);
     const slide = ref(1);
     const tab = ref('all');
-    const addingToCart = ref(false);
+    const addingToCart = ref({});
     const categories = ref(['all']);
     const $q = useQuasar();
     const router = useRouter();
@@ -154,7 +154,7 @@ export default defineComponent({
     })
     async function addToCart(id:number){
       if (store.isAuthenticated){
-        addingToCart.value = true;
+        addingToCart.value[`addingToCart-${id}`] = true;
         let response = await Api.getOne('products', {id})
         if (response.data.success){
           let cartItem = {
@@ -179,7 +179,7 @@ export default defineComponent({
             message: 'Something Went Wrong',
           });
         }
-        addingToCart.value = false;
+        addingToCart.value[`addingToCart-${id}`] = false;
       }else{
         $q.notify({
           color: 'red-10',
