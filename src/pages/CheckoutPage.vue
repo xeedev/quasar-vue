@@ -136,6 +136,7 @@ export default {
       description.value += ' ' + item.quantity+'x ' + item.name + '.'
     })
     async function orderNow(){
+      submitLoading.value = true
       let res = await Api.post('order-now',{
         'description' : description.value,
         'contact' : contact.value,
@@ -161,6 +162,7 @@ export default {
           message: 'something went wrong, please try again'
         })
       }
+      submitLoading.value = false
     }
     function onReset () {
       contact.value = null
