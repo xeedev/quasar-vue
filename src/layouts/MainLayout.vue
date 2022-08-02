@@ -234,7 +234,6 @@ export default defineComponent({
         }
       });
       leftDrawerOpen.value = false
-      console.log('quasar info',$q.screen)
     })
 
     return {
@@ -242,7 +241,6 @@ export default defineComponent({
       isLoggedIn,
       store,
       cart,
-      $q,
       logout,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
