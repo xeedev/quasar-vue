@@ -2,6 +2,8 @@
   <div class="q-py-xl">
     <q-card
       :style="$q.screen.sm || $q.screen.xs ? '' : { width: '350px' }"
+      style="height: 70vh"
+      flat
       class="ma-auto-0 q-py-xl text-center"
     >
       <q-img
