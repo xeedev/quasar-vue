@@ -3,6 +3,7 @@
     <q-card
       :style="$q.screen.sm || $q.screen.xs ? '' : { width: '350px' }"
       class="ma-auto-0 q-py-xl text-center"
+      :flat="$q.screen.sm || $q.screen.xs"
     >
       <q-img
         src="logo.png"
