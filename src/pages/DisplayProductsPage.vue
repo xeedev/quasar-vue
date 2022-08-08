@@ -279,7 +279,7 @@ export default {
 
       return new Promise((resolve, reject) => {
         let options = {
-          maxSizeMB: 0.1,
+          maxSizeMB: 0.25,
           maxWidthOrHeight: 1920,
           useWebWorker: true
         };
