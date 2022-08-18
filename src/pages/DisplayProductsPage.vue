@@ -101,6 +101,14 @@
                       :rules="[val => val !== null && val !== '' || 'Please select category']"
             />
             <p class="text-dark q-mt-md"><strong>Upload Images *</strong></p>
+            <q-input
+              outlined
+              v-model="size"
+              label="Image Upload Size *"
+              hint="Image Upload Size"
+              lazy-rules
+              :rules="[ val => val && val.length > 0 && val > 0.2 && val <= 2 || 'Value must be between 0.2 and 2 MB']"
+            />
             <div class="text-dark q-gutter-md" style="font-size: 2em">
               <q-icon name="attachment" class="cursor-pointer" @click="$refs.image.click()" />
             </div>
@@ -138,7 +146,7 @@ import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import Api from '../services/api';
 import axios from 'axios';
-import imageCompression from "browser-image-compression";
+import imageCompression from 'browser-image-compression';
 
 
 const columns = [
@@ -185,6 +193,7 @@ export default {
     const categories = ref([]);
     const category = ref('');
     const uploadedImages = ref([])
+    const size = ref(localStorage.getItem('size') ?? 0.25)
     function fetchFromServer (startRow, count, filter, sortBy, descending) {
       const data = filter
         ? originalRows.value.filter(row => row.name.includes(filter))
@@ -271,18 +280,18 @@ export default {
     function uploadImages(event) {
       this.onFilesPicked(event);
     }
-    const compressFile = (imageFile) => {
+    const compressFile = (imageFile, maxSize = 1.5) => {
       let size = imageFile.size / 1024 / 1024; // in MiB
       if (size < 0.2) {
         return imageFile;
       }
-
       return new Promise((resolve, reject) => {
         let options = {
-          maxSizeMB: 0.25,
+          maxSizeMB: maxSize,
           maxWidthOrHeight: 1920,
           useWebWorker: true
         };
+        localStorage.setItem('size',maxSize)
         imageCompression(imageFile, options)
           .then(function(compressedFile) {
             resolve(compressedFile);
@@ -297,8 +306,7 @@ export default {
        let formData = new FormData();
        for (let i = 0; i < files.length; i++) {
          let file = files[i];
-         file = await compressFile(file);
-         console.log(file);
+         file = await compressFile(file, size.value);
          formData.append('files[]', file);
        }
 
@@ -340,7 +348,6 @@ export default {
       })
     })
     async function save(action){
-      console.log(action);
       let payload = {
         'name' : name.value,
         'detail' : detail.value,
@@ -423,6 +430,7 @@ export default {
       uploadedImages,
       deleteLoading,
       selectedProduct,
+      size,
       onRequest,
       submit,
       uploadImages,
