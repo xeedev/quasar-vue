@@ -1,6 +1,15 @@
 <template>
   <div class="q-pa-md">
     <h6 class="q-pa-none q-ma-none">Upload Home Page Images</h6>
+    <q-input
+      dense
+      outlined
+      v-model="size"
+      label="Image Upload Size *"
+      hint="Image Upload Size"
+      lazy-rules
+      :rules="[ val => val && val.length > 0 && val > 0.2 && val <= 2 || 'Value must be between 0.2 and 2 MB']"
+    />
     <div class="row q-gutter-md">
       <q-card class="my-card cursor-pointer" @click="$refs.image.click()">
         <q-card-section class="q-ma-none q-pa-none section">
@@ -37,6 +46,7 @@ import imageCompression from 'browser-image-compression';
 export default {
   setup () {
     const $q = useQuasar()
+    const size = ref(localStorage.getItem('size') ?? 0.25)
     const images = ref([])
     onMounted(async () => {
       let res = await Api.getList('gallery')
@@ -52,7 +62,7 @@ export default {
       let formData = new FormData();
       for (let i = 0; i < files.length; i++) {
         let file = files[i];
-        file = await compressFile(file);
+        file = await compressFile(file, size.value);
         console.log(file);
         formData.append('files[]', file);
       }
@@ -79,7 +89,7 @@ export default {
         });
       $q.loading.hide();
     }
-     const compressFile = (imageFile) => {
+     const compressFile = (imageFile, maxSize = 1.5) => {
        let size = imageFile.size / 1024 / 1024; // in MiB
        if (size < 0.2) {
          return imageFile;
@@ -87,10 +97,11 @@ export default {
 
        return new Promise((resolve, reject) => {
          let options = {
-           maxSizeMB: 0.25,
+           maxSizeMB: maxSize,
            maxWidthOrHeight: 1920,
            useWebWorker: true
          };
+         localStorage.setItem('size',maxSize)
          imageCompression(imageFile, options)
            .then(function(compressedFile) {
              resolve(compressedFile);
@@ -105,6 +116,7 @@ export default {
     }
     return {
       images,
+      size,
       removeUrl,
       onFilesPicked,
       uploadImages,
