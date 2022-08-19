@@ -13,15 +13,18 @@
 
         <q-toolbar-title> Wood Surface </q-toolbar-title>
         <q-space></q-space>
-        <q-btn color="dark" label="Logout" @click="logout">
-          <!-- <q-menu>
-            <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup @click="$router.push('/login')">
+        <q-btn color="dark" label="Settings">
+          <q-menu>
+            <q-list>
+              <q-item clickable v-close-popup>
+                <q-item-section>Change Password</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup @click="logout">
                 <q-item-section>Logout</q-item-section>
               </q-item>
               <q-separator />
             </q-list>
-          </q-menu> -->
+          </q-menu>
         </q-btn>
       </q-toolbar>
     </q-header>
