@@ -78,7 +78,7 @@
           <q-img
             src="logo.png"
             spinner-color="white"
-            @click="$router.push('/dashboard')"
+            @click="$router.push('/admin-dashboard')"
             fit="contain"
             height="80px"
             class="q-ma-sm cursor-pointer"
@@ -117,7 +117,7 @@ const linksList = [
     title: 'Dashboard',
     caption: 'Statistics',
     icon: 'dashboard',
-    link: 'dashboard',
+    link: 'admin-dashboard',
   },
   {
     title: 'Products',
