@@ -8,10 +8,10 @@
       label="Image Upload Size *"
       hint="Image Upload Size"
       lazy-rules
-      :rules="[ val => val && val.length > 0 && val > 0.2 && val <= 2 || 'Value must be between 0.2 and 2 MB']"
+      :rules="[ val => val && val > 0.20 && val <= 2 || 'Value must be between 0.2 and 2 MB']"
     />
     <div class="row q-gutter-md">
-      <q-card class="my-card cursor-pointer" @click="$refs.image.click()">
+      <q-card class="my-card cursor-pointer" @click="$refs.image.click()" v-if="size > 0.20 && size <= 2">
         <q-card-section class="q-ma-none q-pa-none section">
           <q-icon name="perm_media" size="xl" />
         </q-card-section>
