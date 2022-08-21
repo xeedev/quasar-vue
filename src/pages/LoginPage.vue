@@ -65,7 +65,7 @@ export default {
     onMounted(async () => {
        await Api.getList( 'validateToken').then((response) => {
         if (response?.data?.authenticated && localStorage.getItem('token_check') === process.env.ADMIN){
-          router.push('/dashboard');
+          router.push('/admin-dashboard');
         }else if(response?.data?.authenticated && localStorage.getItem('token_check') === process.env.USER){
           router.push('/');
         }
@@ -106,7 +106,7 @@ export default {
             icon: 'cloud_done',
             message: 'Success',
           });
-          router.push('/dashboard');
+          router.push('/admin-dashboard');
         }else if(res?.data?.data?.token && res?.data?.data?.me === 0){
           store.changeAuthStatus(true)
           localStorage.setItem('token', res?.data?.data?.token);
