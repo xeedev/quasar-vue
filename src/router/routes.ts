@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/dashboard',
+    path: '/admin-dashboard',
     component: () => import('layouts/DashboardLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/DashboardPage.vue') },
