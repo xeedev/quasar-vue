@@ -107,7 +107,7 @@
               label="Image Upload Size *"
               hint="Image Upload Size"
               lazy-rules
-              :rules="[ val => val && val.length > 0 && val > 0.2 && val <= 2 || 'Value must be between 0.2 and 2 MB']"
+              :rules="[ val => val && val > 0.2 && val <= 2 || 'Value must be between 0.2 and 2 MB']"
             />
             <div class="text-dark q-gutter-md" style="font-size: 2em">
               <q-icon name="attachment" class="cursor-pointer" @click="$refs.image.click()" />
